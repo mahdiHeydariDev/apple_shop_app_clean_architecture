@@ -13,6 +13,7 @@ class CategoriesRepositoryImpl extends CategoriesRepository {
   Future<Either<CustomError, List<CategoryEntity>>> getAllCategories() async {
     try {
       //not completed
+      //TODO Searching for a way to automatically create lists
       final Response datasourceResponse = await dataSource.getAllCategories();
       if (datasourceResponse.statusCode == 200) {
         final List<BannerModel> bannersList =
