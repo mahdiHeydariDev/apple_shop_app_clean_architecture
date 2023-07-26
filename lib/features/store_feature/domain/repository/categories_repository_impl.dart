@@ -12,6 +12,7 @@ class CategoriesRepositoryImpl extends CategoriesRepository {
   @override
   Future<Either<CustomError, List<CategoryEntity>>> getAllCategories() async {
     try {
+      //not completed
       final Response datasourceResponse = await dataSource.getAllCategories();
       if (datasourceResponse.statusCode == 200) {
         final List<BannerModel> bannersList =
