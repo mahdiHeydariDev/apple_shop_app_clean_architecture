@@ -9,10 +9,12 @@ class CustomCachedImage extends StatelessWidget {
     required this.imageUrl,
     this.rounded = true,
     this.loadingAnimation = true,
+    this.fixed = true,
   });
   final String imageUrl;
   final bool rounded;
   final bool loadingAnimation;
+  final bool fixed;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CustomCachedImage extends StatelessWidget {
           rounded ? BorderRadius.circular(15) : BorderRadius.circular(0),
       child: CachedNetworkImage(
         imageUrl: imageUrl,
-        fit: BoxFit.cover,
+        fit: fixed ? BoxFit.cover : null,
         // color: ConstantsColors.grey,
 
         placeholder: (context, url) {
