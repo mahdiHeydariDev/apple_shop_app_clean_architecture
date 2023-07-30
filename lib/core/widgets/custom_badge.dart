@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 
 class CustomBadge extends StatelessWidget {
-  const CustomBadge({super.key});
+  final num percent;
+  const CustomBadge({super.key, this.percent = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +14,10 @@ class CustomBadge extends StatelessWidget {
         color: ConstantsColors.red,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
-          '%4',
-          style: TextStyle(
+          '%$percent',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 10,
             fontWeight: FontWeight.w700,
