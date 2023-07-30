@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 
 class ProductCart extends StatelessWidget {
-  const ProductCart({super.key});
+  final ProductEntity product;
+  const ProductCart({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +34,12 @@ class ProductCart extends StatelessWidget {
                     alignment: AlignmentDirectional.center,
                     children: <Widget>[
                       SizedBox(
-                        width: 80,
+                        width: 90,
                         height: 104,
-                        child: Image.asset(
-                          'assets/images/pro.png',
-                          fit: BoxFit.cover,
+                        child: CustomCachedImage(
+                          imageUrl: product.thumbnail,
+                          fixed: false,
+                          rounded: false,
                         ),
                       ),
                       const Positioned(
@@ -43,26 +50,31 @@ class ProductCart extends StatelessWidget {
                           color: ConstantsColors.blue,
                         ),
                       ),
-                      const Positioned(
+                      Positioned(
                         bottom: 0,
                         left: 10,
-                        child: CustomBadge(),
+                        child: CustomBadge(
+                          percent: product.percent,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               //middle cart (product name)
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 10,
+                  horizontal: 10,
                 ),
                 child: Text(
-                  'آیفون ۱۳ پرومکس',
-                  style: TextStyle(
+                  product.name,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
               ),
               const Spacer(),
@@ -85,24 +97,24 @@ class ProductCart extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.chevron_left_rounded,
                       color: Colors.white,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Text>[
                         Text(
-                          '12,000',
-                          style: TextStyle(
+                          '${product.price}',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -110,8 +122,8 @@ class ProductCart extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '12,000,000',
-                          style: TextStyle(
+                          '${product.realPrice}',
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,

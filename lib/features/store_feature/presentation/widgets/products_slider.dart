@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/widgets/product_cart.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 
 class ProductsSlider extends StatelessWidget {
-  const ProductsSlider({super.key});
+  final String title;
+  final List<ProductEntity> products;
+  const ProductsSlider({
+    super.key,
+    required this.title,
+    required this.products,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Column(
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(
+          Padding(
+            padding: const EdgeInsets.only(
               right: 24,
               left: 24,
               top: 32,
@@ -20,15 +27,15 @@ class ProductsSlider extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Text(
-                  'پرفروش ترین ها🔥',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     color: ConstantsColors.grey,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   'مشاهده همه',
                   style: TextStyle(
                     color: ConstantsColors.blue,
@@ -36,7 +43,7 @@ class ProductsSlider extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.chevron_right_rounded,
                   color: ConstantsColors.blue,
                 )
@@ -49,8 +56,11 @@ class ProductsSlider extends StatelessWidget {
               padding: const EdgeInsets.only(right: 14),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return const ProductCart();
+                  return ProductCart(
+                    product: products[index],
+                  );
                 },
               ),
             ),

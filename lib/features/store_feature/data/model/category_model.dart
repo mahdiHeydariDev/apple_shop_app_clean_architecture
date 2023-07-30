@@ -18,7 +18,7 @@ class CategoryModel extends CategoryEntity {
     return CategoryModel(
       color: mapJson['color'],
       icon:
-          'http://startflutter.ir/api/files/${mapJson['collectionId']}/${mapJson['id']}/${mapJson['thumbnail']}',
+          'http://startflutter.ir/api/files/${mapJson['collectionId']}/${mapJson['id']}/${mapJson['icon']}',
       id: mapJson['id'],
       thumbnail:
           'http://startflutter.ir/api/files/${mapJson['collectionId']}/${mapJson['id']}/${mapJson['thumbnail']}',

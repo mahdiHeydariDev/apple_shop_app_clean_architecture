@@ -48,9 +48,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   sliderController: sliderController,
                   banners: (state.status as HomeSuccessStatus).banners,
                 ),
-                const CategorySlider(),
-                const ProductsSlider(),
-                const ProductsSlider(),
+                CategorySlider(
+                  categories: (state.status as HomeSuccessStatus).categories,
+                ),
+                ProductsSlider(
+                  title: 'محبوب ترین ها⚡️',
+                  products: (state.status as HomeSuccessStatus).hotestProducts,
+                ),
+                ProductsSlider(
+                  title: 'پرفروش ترین ها🔥',
+                  products:
+                      (state.status as HomeSuccessStatus).bestSellerProducts,
+                ),
               ],
               if (state.status is HomeFailedStatus) ...[
                 const SliverToBoxAdapter(

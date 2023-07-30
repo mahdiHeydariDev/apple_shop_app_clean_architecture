@@ -28,7 +28,7 @@ class ProductsByCategoryScreen extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   return const Expanded(
-                    child: ProductCart(),
+                    child: Text('data'),
                   );
                 },
               ),
