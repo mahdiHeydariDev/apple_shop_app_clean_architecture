@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
-import 'package:store_app_clean_architecture/core/widgets/product_cart.dart';
 
 class ProductsByCategoryScreen extends StatelessWidget {
   const ProductsByCategoryScreen({super.key});
