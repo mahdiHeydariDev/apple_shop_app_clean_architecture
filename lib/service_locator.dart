@@ -10,6 +10,7 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/repos
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/banners_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/categories_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/products_use_case.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
 
 var serviceLocator = GetIt.instance;
@@ -76,6 +77,11 @@ Future<void> initGeiIt() async {
       bannersUsecase: serviceLocator.get(),
       categoriesUsecase: serviceLocator.get(),
       productsUsecase: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<CategoriesBloc>(
+    CategoriesBloc(
+      categoriesUsecase: serviceLocator.get(),
     ),
   );
 }
