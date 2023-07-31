@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/category_entity.dart';
 
 class CategoryCart extends StatelessWidget {
-  const CategoryCart({super.key});
+  final CategoryEntity category;
+  const CategoryCart({
+    super.key,
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
+    return CustomCachedImage(
+      imageUrl: category.thumbnail,
     );
   }
 }
