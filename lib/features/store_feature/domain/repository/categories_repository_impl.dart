@@ -48,4 +48,41 @@ class CategoriesRepositoryImpl extends CategoriesRepository {
       );
     }
   }
+
+  @override
+  Future<Either<CustomError, CategoryEntity>> getCategoryById(
+      {required String id}) async {
+    try {
+      //TODO Searching for a way to automatically create lists
+      final Response datasourceResponse =
+          await dataSource.getCategoryById(id: id);
+
+      if (datasourceResponse.statusCode == 200) {
+        final CategoryEntity category =
+            CategoryModel.fromMapJson(datasourceResponse.data['items'][0]);
+
+        return Right(category);
+      } else {
+        return Left(
+          CustomError(
+            header: ApiText.networkHeader,
+            description: ApiText.networkDescription,
+          ),
+        );
+      }
+    } on ApiEception catch (_) {
+      return Left(
+        CustomError(
+          header: ApiText.networkHeader,
+          description: ApiText.networkDescription,
+        ),
+      );
+    } catch (_) {
+      return Left(
+        CustomError(
+            header: ApiText.uknownHeader,
+            description: ApiText.uknownDescription),
+      );
+    }
+  }
 }
