@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:store_app_clean_architecture/core/constants/constants_routes/constants_routs.dart';
+import 'package:store_app_clean_architecture/core/constants/constants_routes/constants_api_routs.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/api_error.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.dart';
 
