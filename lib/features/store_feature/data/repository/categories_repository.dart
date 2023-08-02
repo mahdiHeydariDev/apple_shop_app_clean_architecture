@@ -4,4 +4,7 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 
 abstract class CategoriesRepository {
   Future<Either<CustomError, List<CategoryEntity>>> getAllCategories();
+  Future<Either<CustomError, CategoryEntity>> getCategoryById({
+    required String id,
+  });
 }
