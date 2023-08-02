@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/basket_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/categories_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/home_screen.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/profile_screen.dart';
 import 'package:store_app_clean_architecture/service_locator.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -23,6 +25,7 @@ class _MainWrapperState extends State<MainWrapper> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        backgroundColor: ConstantsColors.background,
         body: SafeArea(
           child: IndexedStack(
             index: screenIndex,
@@ -61,6 +64,16 @@ class _MainWrapperState extends State<MainWrapper> {
                   activeIcon: Icon(Icons.category),
                   label: 'دسته بندی',
                 ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_basket_outlined),
+                  activeIcon: Icon(Icons.shopping_basket),
+                  label: 'سبد خرید',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline),
+                  activeIcon: Icon(Icons.person),
+                  label: 'حساب کاربری',
+                ),
               ],
             ),
           ),
@@ -79,6 +92,8 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<CategoriesBloc>(),
         child: const CategoriesScreen(),
       ),
+      const BasketScreen(),
+      const ProfileScreen(),
     ];
   }
 }
