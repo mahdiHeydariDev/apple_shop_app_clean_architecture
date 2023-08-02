@@ -23,7 +23,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           ),
         );
         final Either<CustomError, List<CategoryEntity>> categoriesResponse =
-            await categoriesUsecase.call();
+            await categoriesUsecase.callAllCategories();
 
         if (categoriesResponse.isRight()) {
           List<CategoryEntity> categoriesList = [];
