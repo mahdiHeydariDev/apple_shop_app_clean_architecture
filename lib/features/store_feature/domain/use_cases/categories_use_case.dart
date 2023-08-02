@@ -7,7 +7,12 @@ class CategoriesUsecase {
   final CategoriesRepositoryImpl repository;
   CategoriesUsecase({required this.repository});
 
-  Future<Either<CustomError, List<CategoryEntity>>> call() async {
+  Future<Either<CustomError, List<CategoryEntity>>> callAllCategories() async {
     return await repository.getAllCategories();
+  }
+
+  Future<Either<CustomError, CategoryEntity>> callOneCategory(
+      {required String id}) async {
+    return await repository.getCategoryById(id: id);
   }
 }
