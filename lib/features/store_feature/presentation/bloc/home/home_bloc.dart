@@ -34,7 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final Either<CustomError, List<BannerEntity>> bannersResponse =
             await bannersUsecase();
         final Either<CustomError, List<CategoryEntity>> categoriesResponse =
-            await categoriesUsecase();
+            await categoriesUsecase.callAllCategories();
         final Either<CustomError, List<ProductEntity>> hotestProductsResponse =
             await productsUsecase(filter: 'Hotest');
         final Either<CustomError, List<ProductEntity>>
