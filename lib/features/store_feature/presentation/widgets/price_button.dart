@@ -5,7 +5,15 @@ import 'package:store_app_clean_architecture/core/constants/constant_colors.dart
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
 
 class PriceButton extends StatelessWidget {
-  const PriceButton({super.key});
+  final num realPrice;
+  final int price;
+  final num percent;
+  const PriceButton({
+    super.key,
+    required this.realPrice,
+    required this.price,
+    required this.percent,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +43,21 @@ class PriceButton extends StatelessWidget {
                   // color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      CustomBadge(),
+                      CustomBadge(percent: percent),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            '16,000',
-                            style: TextStyle(
+                            '$price',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 12,
@@ -57,8 +65,8 @@ class PriceButton extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '15,000',
-                            style: TextStyle(
+                            '$realPrice',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
