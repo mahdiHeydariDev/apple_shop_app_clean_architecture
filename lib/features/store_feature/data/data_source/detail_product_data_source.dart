@@ -28,7 +28,28 @@ class DetailProductDatasource {
     };
     try {
       final Response response = await dio.get(
-        ConstantsRoutesApi.variantsRoures,
+        ConstantsRoutesApi.variantsRoutes,
+        queryParameters: queryParams,
+      );
+
+      return response;
+    } on DioException catch (exception) {
+      throw ApiEception(
+        exceptionMessage: exception.response!.statusMessage!,
+        exceptionCode: exception.response!.statusCode!,
+      );
+    } catch (_) {
+      throw UknownError();
+    }
+  }
+
+  Future<Response> getProperties({required String productId}) async {
+    final Map<String, String> queryParams = {
+      'filter': 'product_id="$productId"'
+    };
+    try {
+      final Response response = await dio.get(
+        ConstantsRoutesApi.propertiesRoutes,
         queryParameters: queryParams,
       );
 
