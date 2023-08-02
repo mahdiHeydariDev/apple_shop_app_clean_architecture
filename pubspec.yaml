@@ -21,6 +21,7 @@ dependencies:
   get_it: ^7.6.0
   cached_network_image: ^3.2.3
   loading_animation_widget: ^1.2.0+4
+  dotted_dashed_line: ^0.0.3
 
 
   
