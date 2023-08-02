@@ -1,46 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
+import 'package:store_app_clean_architecture/core/utils/generators/color_generator.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/variant_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_event.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_state.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_status.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/add_to_basket_button.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/drop_down_box.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/price_button.dart';
 
-class DetailProductScreen extends StatelessWidget {
-  const DetailProductScreen({super.key});
+class DetailProductScreen extends StatefulWidget {
+  final ProductEntity product;
+  const DetailProductScreen({
+    super.key,
+    required this.product,
+  });
+
+  @override
+  State<DetailProductScreen> createState() => _DetailProductScreenState();
+}
+
+class _DetailProductScreenState extends State<DetailProductScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    BlocProvider.of<DetailProductBloc>(context).add(
+      DetailProductSendRequestEvent(
+        id: widget.product.category,
+        productId: widget.product.id,
+      ),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CustomHeader(
-              title: 'آیفون',
-              backButton: true,
-            ),
-            //header(name of product)
-            ProductName(),
-            //Product Gallery
-            ProductGallery(),
-            //select variants
-            VariantGenerator(),
-            //drop down box
-            DropDowBox(),
-            DropDowBox(),
-            DropDowBox(),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocBuilder<DetailProductBloc, DetailProductState>(
+            builder: (context, state) {
+              return CustomScrollView(
+                slivers: <Widget>[
+                  if (state.status is DetailProductLoadingStatus) ...[
+                    const SliverToBoxAdapter(
+                      child: Text('Loading...'),
+                    )
+                  ],
+                  if (state.status is DetailProductSuccessStatus) ...[
+                    CustomHeader(
+                      title: (state.status as DetailProductSuccessStatus)
+                          .category
+                          .title,
+                      backButton: true,
+                    ),
+                    //header(name of product)
+                    ProductName(name: widget.product.name),
+                    //Product Gallery
+                    ProductGallery(
+                      mainImage: widget.product.thumbnail,
+                      galleryImages:
+                          (state.status as DetailProductSuccessStatus)
+                              .galleryImages,
+                    ),
+                    //select variants
+                    VariantsContainer(
+                      productVariants:
+                          (state.status as DetailProductSuccessStatus)
+                              .productVariants,
+                    ),
 
-            //price & a button to add basket
-            FooterWidget(),
-          ],
+                    //drop down box
+                    if (widget.product.description.isNotEmpty) ...[
+                      DescriptionDropDowBox(
+                        isDescription: true,
+                        description: widget.product.description,
+                      ),
+                    ],
+                    if ((state.status as DetailProductSuccessStatus)
+                        .properties
+                        .isNotEmpty) ...[
+                      DescriptionDropDowBox(
+                        isDescription: false,
+                        properties: (state.status as DetailProductSuccessStatus)
+                            .properties,
+                      ),
+                    ],
+                    // DescriptionDropDowBox(),
+                    // DescriptionDropDowBox(),
+
+                    //price & a button to add basket
+                    FooterWidget(product: widget.product),
+                  ],
+                  if (state.status is DetailProductFailedStatus) ...[
+                    const SliverToBoxAdapter(
+                      child: Text('Failed...'),
+                    ),
+                  ],
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
   }
 }
 
-class VariantGenerator extends StatelessWidget {
-  const VariantGenerator({
+class VariantsContainer extends StatelessWidget {
+  final List<ProductVariantEntity> productVariants;
+  const VariantsContainer({
     super.key,
+    required this.productVariants,
   });
 
   @override
@@ -54,35 +133,8 @@ class VariantGenerator extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'انتخاب رنگ',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: SizedBox(
-                height: 26,
-                child: ListView.builder(
-                  itemCount: 3,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          width: 26,
-                          height: 26,
-                          color: Colors.red,
-                          margin: const EdgeInsets.only(left: 10),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            )
+            for (var variant in productVariants)
+              Variantgenerator(productVariant: variant)
           ],
         ),
       ),
@@ -90,11 +142,177 @@ class VariantGenerator extends StatelessWidget {
   }
 }
 
-class ProductGallery extends StatelessWidget {
-  const ProductGallery({
+class Variantgenerator extends StatelessWidget {
+  final ProductVariantEntity productVariant;
+  const Variantgenerator({super.key, required this.productVariant});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        if (productVariant.variants.isNotEmpty) ...[
+          Text(productVariant.variantType.title),
+        ],
+        if (productVariant.variantType.type == 'Color') ...[
+          ColorVariantGenerator(colors: productVariant.variants),
+        ],
+        if (productVariant.variantType.type == 'Storage') ...[
+          StorageVariantGenerator(storages: productVariant.variants),
+        ],
+      ],
+    );
+  }
+}
+
+class ColorVariantGenerator extends StatefulWidget {
+  final List<VariantEntity> colors;
+  const ColorVariantGenerator({
     super.key,
+    required this.colors,
   });
 
+  @override
+  State<ColorVariantGenerator> createState() => _ColorVariantGeneratorState();
+}
+
+class _ColorVariantGeneratorState extends State<ColorVariantGenerator> {
+  int currentSelected = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: 36,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.colors.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      currentSelected = index;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.linear,
+                    margin: const EdgeInsets.only(left: 10),
+                    width: index == currentSelected ? 67 : 26,
+                    height: 26,
+                    decoration: BoxDecoration(
+                      color: Color(
+                        colorGenerator(color: widget.colors[index].value),
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        9,
+                      ),
+                    ),
+                    child: currentSelected == index
+                        ? Center(
+                            child: Text(
+                              widget.colors[index].name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class StorageVariantGenerator extends StatefulWidget {
+  final List<VariantEntity> storages;
+  const StorageVariantGenerator({super.key, required this.storages});
+
+  @override
+  State<StorageVariantGenerator> createState() =>
+      _StorageVariantGeneratorState();
+}
+
+class _StorageVariantGeneratorState extends State<StorageVariantGenerator> {
+  int currentSelected = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: 36,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.storages.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      currentSelected = index;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.linear,
+                    margin: const EdgeInsets.only(left: 10),
+                    width: 67,
+                    height: 26,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(
+                        color: currentSelected == index
+                            ? ConstantsColors.blue
+                            : ConstantsColors.grey,
+                        width: 2,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${widget.storages[index].value} GB',
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          color: currentSelected == index
+                              ? ConstantsColors.blue
+                              : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class ProductGallery extends StatefulWidget {
+  final String mainImage;
+  final List<GalleryImageEntity> galleryImages;
+  const ProductGallery({
+    super.key,
+    required this.mainImage,
+    required this.galleryImages,
+  });
+
+  @override
+  State<ProductGallery> createState() => _ProductGalleryState();
+}
+
+class _ProductGalleryState extends State<ProductGallery> {
+  int currentSelected = 0;
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
@@ -124,12 +342,19 @@ class ProductGallery extends StatelessWidget {
                       Icons.bookmark_add_outlined,
                       size: 25,
                     ),
-                    SizedBox(
-                      width: 101,
-                      height: 148,
-                      child: Image.asset(
-                        'assets/images/pro.png',
-                        fit: BoxFit.fill,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Expanded(
+                        child: SizedBox(
+                          height: 148,
+                          child: CustomCachedImage(
+                            imageUrl: widget.galleryImages.isNotEmpty
+                                ? widget.galleryImages[currentSelected].imageUrl
+                                : widget.mainImage,
+                            fixed: true,
+                            rounded: false,
+                          ),
+                        ),
                       ),
                     ),
                     const Row(
@@ -153,23 +378,37 @@ class ProductGallery extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 3,
+                    itemCount: widget.galleryImages.length,
                     itemBuilder: (context, index) {
                       //return column for solve the size problem in list view builder on items
                       return Column(
                         children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                            ),
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: ConstantsColors.grey,
-                                width: 1,
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                currentSelected = index;
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 5,
                               ),
-                              borderRadius: BorderRadius.circular(15),
+                              width: 70,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: currentSelected == index
+                                      ? ConstantsColors.blue
+                                      : ConstantsColors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: CustomCachedImage(
+                                imageUrl: widget.galleryImages[index].imageUrl,
+                                rounded: true,
+                                fixed: true,
+                              ),
                             ),
                           ),
                         ],
@@ -187,18 +426,20 @@ class ProductGallery extends StatelessWidget {
 }
 
 class ProductName extends StatelessWidget {
+  final String name;
   const ProductName({
     super.key,
+    required this.name,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const SliverPadding(
-      padding: EdgeInsets.only(bottom: 20),
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 20),
       sliver: SliverToBoxAdapter(
         child: Text(
-          'آیفون 13 پرو مکس',
-          style: TextStyle(
+          name,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
@@ -210,14 +451,16 @@ class ProductName extends StatelessWidget {
 }
 
 class FooterWidget extends StatelessWidget {
+  final ProductEntity product;
   const FooterWidget({
+    required this.product,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const SliverPadding(
-      padding: EdgeInsets.symmetric(
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
         horizontal: 24,
         vertical: 20,
       ),
@@ -226,11 +469,15 @@ class FooterWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            AddToBasketButton(),
-            SizedBox(
+            const AddToBasketButton(),
+            const SizedBox(
               width: 20,
             ),
-            PriceButton(),
+            PriceButton(
+              realPrice: product.realPrice,
+              price: product.price,
+              percent: product.percent,
+            ),
           ],
         ),
       ),
