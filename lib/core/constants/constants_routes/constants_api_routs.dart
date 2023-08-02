@@ -10,5 +10,7 @@ class ConstantsRoutesApi {
   //get all variant types
   static const String variantTypesRoutes = 'collections/variants_type/records';
   //get all variants
-  static const String variantsRoures = 'collections/variants/records';
+  static const String variantsRoutes = 'collections/variants/records';
+  //get all product properties
+  static const String propertiesRoutes = 'collections/properties/records';
 }
