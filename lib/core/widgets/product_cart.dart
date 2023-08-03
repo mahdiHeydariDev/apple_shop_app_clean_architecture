@@ -4,7 +4,7 @@ import 'package:store_app_clean_architecture/core/constants/constant_colors.dart
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
-import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/detail_product_screen.dart';
 import 'package:store_app_clean_architecture/service_locator.dart';
 
@@ -21,12 +21,8 @@ class ProductCart extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => DetailProductBloc(
-                categoryUsecase: serviceLocator.get(),
-                galleryImageUsecase: serviceLocator.get(),
-                detailProductUsecase: serviceLocator.get(),
-              ),
+            builder: (context) => BlocProvider.value(
+              value: serviceLocator.get<BasketBloc>(),
               child: DetailProductScreen(product: product),
             ),
           ),
