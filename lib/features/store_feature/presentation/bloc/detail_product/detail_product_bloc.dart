@@ -5,6 +5,7 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/property_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/basket_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/categories_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/detail_product_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/gallery_image_use_case.dart';
@@ -16,10 +17,12 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
   final CategoriesUsecase categoryUsecase;
   final GalleryImagesUsecase galleryImageUsecase;
   final DetailProductUsecase detailProductUsecase;
+  final BasketUsecase basketUsecase;
   DetailProductBloc({
     required this.categoryUsecase,
     required this.galleryImageUsecase,
     required this.detailProductUsecase,
+    required this.basketUsecase,
   }) : super(
           DetailProductState(
             status: DetailProductLoadingStatus(),
@@ -73,7 +76,6 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
           (l) => null,
           (successProperties) => properties = successProperties,
         );
-        print(properties);
 
         emit(
           state.setStatus(
@@ -99,6 +101,23 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
           ),
         );
       }
+    });
+    on<DetailProductAddToBasketEvent>((event, emit) async {
+      emit(
+        state.setStatus(
+          newStatus: DetailProductLoadingStatus(),
+        ),
+      );
+      final Either<CustomError, String> addBasketResponse =
+          await basketUsecase.callAddToBasket(
+        product: event.product,
+        variants: event.variants,
+      );
+      emit(
+        state.setStatus(
+          newStatus: DetailProductAddedStatus(),
+        ),
+      );
     });
   }
 }
