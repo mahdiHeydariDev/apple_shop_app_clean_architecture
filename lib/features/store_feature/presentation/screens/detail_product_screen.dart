@@ -8,6 +8,7 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/variant_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_state.dart';
@@ -15,6 +16,7 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/add_to_basket_button.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/drop_down_box.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/price_button.dart';
+import 'package:store_app_clean_architecture/service_locator.dart';
 
 class DetailProductScreen extends StatefulWidget {
   final ProductEntity product;
@@ -29,85 +31,91 @@ class DetailProductScreen extends StatefulWidget {
 
 class _DetailProductScreenState extends State<DetailProductScreen> {
   @override
-  void initState() {
-    // TODO: implement initState
-    BlocProvider.of<DetailProductBloc>(context).add(
-      DetailProductSendRequestEvent(
-        id: widget.product.category,
-        productId: widget.product.id,
-      ),
-    );
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocBuilder<DetailProductBloc, DetailProductState>(
-            builder: (context, state) {
-              return CustomScrollView(
-                slivers: <Widget>[
-                  if (state.status is DetailProductLoadingStatus) ...[
-                    const SliverToBoxAdapter(
-                      child: Text('Loading...'),
-                    )
-                  ],
-                  if (state.status is DetailProductSuccessStatus) ...[
-                    CustomHeader(
-                      title: (state.status as DetailProductSuccessStatus)
-                          .category
-                          .title,
-                      backButton: true,
-                    ),
-                    //header(name of product)
-                    ProductName(name: widget.product.name),
-                    //Product Gallery
-                    ProductGallery(
-                      mainImage: widget.product.thumbnail,
-                      galleryImages:
-                          (state.status as DetailProductSuccessStatus)
-                              .galleryImages,
-                    ),
-                    //select variants
-                    VariantsContainer(
-                      productVariants:
-                          (state.status as DetailProductSuccessStatus)
-                              .productVariants,
-                    ),
+    return BlocProvider(
+      create: (context) {
+        var bloc = DetailProductBloc(
+          categoryUsecase: serviceLocator.get(),
+          galleryImageUsecase: serviceLocator.get(),
+          detailProductUsecase: serviceLocator.get(),
+          basketUsecase: serviceLocator.get(),
+        );
+        bloc.add(
+          DetailProductSendRequestEvent(
+            id: widget.product.category,
+            productId: widget.product.id,
+          ),
+        );
+        return bloc;
+      },
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: SafeArea(
+            child: BlocBuilder<DetailProductBloc, DetailProductState>(
+              builder: (context, state) {
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    if (state.status is DetailProductLoadingStatus) ...[
+                      const SliverToBoxAdapter(
+                        child: Text('Loading...'),
+                      )
+                    ],
+                    if (state.status is DetailProductSuccessStatus) ...[
+                      CustomHeader(
+                        title: (state.status as DetailProductSuccessStatus)
+                            .category
+                            .title,
+                        backButton: true,
+                      ),
+                      //header(name of product)
+                      ProductName(name: widget.product.name),
+                      //Product Gallery
+                      ProductGallery(
+                        mainImage: widget.product.thumbnail,
+                        galleryImages:
+                            (state.status as DetailProductSuccessStatus)
+                                .galleryImages,
+                      ),
+                      //select variants
+                      VariantsContainer(
+                        productVariants:
+                            (state.status as DetailProductSuccessStatus)
+                                .productVariants,
+                      ),
 
-                    //drop down box
-                    if (widget.product.description.isNotEmpty) ...[
-                      DescriptionDropDowBox(
-                        isDescription: true,
-                        description: widget.product.description,
+                      //drop down box
+                      if (widget.product.description.isNotEmpty) ...[
+                        DescriptionDropDowBox(
+                          isDescription: true,
+                          description: widget.product.description,
+                        ),
+                      ],
+                      if ((state.status as DetailProductSuccessStatus)
+                          .properties
+                          .isNotEmpty) ...[
+                        DescriptionDropDowBox(
+                          isDescription: false,
+                          properties:
+                              (state.status as DetailProductSuccessStatus)
+                                  .properties,
+                        ),
+                      ],
+                      // DescriptionDropDowBox(),
+                      // DescriptionDropDowBox(),
+
+                      //price & a button to add basket
+                      FooterWidget(product: widget.product),
+                    ],
+                    if (state.status is DetailProductFailedStatus) ...[
+                      const SliverToBoxAdapter(
+                        child: Text('Failed...'),
                       ),
                     ],
-                    if ((state.status as DetailProductSuccessStatus)
-                        .properties
-                        .isNotEmpty) ...[
-                      DescriptionDropDowBox(
-                        isDescription: false,
-                        properties: (state.status as DetailProductSuccessStatus)
-                            .properties,
-                      ),
-                    ],
-                    // DescriptionDropDowBox(),
-                    // DescriptionDropDowBox(),
-
-                    //price & a button to add basket
-                    FooterWidget(product: widget.product),
                   ],
-                  if (state.status is DetailProductFailedStatus) ...[
-                    const SliverToBoxAdapter(
-                      child: Text('Failed...'),
-                    ),
-                  ],
-                ],
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -469,7 +477,7 @@ class FooterWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const AddToBasketButton(),
+            AddToBasketButton(product: product),
             const SizedBox(
               width: 20,
             ),
