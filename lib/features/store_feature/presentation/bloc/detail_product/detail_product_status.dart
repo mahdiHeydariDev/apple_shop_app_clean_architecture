@@ -22,6 +22,8 @@ class DetailProductSuccessStatus extends DetailProductStatus {
   });
 }
 
+class DetailProductAddedStatus extends DetailProductStatus {}
+
 class DetailProductFailedStatus extends DetailProductStatus {
   final CustomError error;
 
