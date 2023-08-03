@@ -2,7 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/basket_screen.dart';
@@ -22,6 +25,8 @@ class _MainWrapperState extends State<MainWrapper> {
   int screenIndex = 0;
   @override
   Widget build(BuildContext context) {
+    var orderBox = Hive.box<OrderEntity>('orders');
+    int orderCount = orderBox.length;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -40,6 +45,7 @@ class _MainWrapperState extends State<MainWrapper> {
                 setState(() {
                   screenIndex = index;
                 });
+                print(screenIndex);
               },
               currentIndex: screenIndex,
               type: BottomNavigationBarType.fixed,
@@ -53,7 +59,7 @@ class _MainWrapperState extends State<MainWrapper> {
               unselectedLabelStyle: const TextStyle(
                 color: ConstantsColors.grey,
               ),
-              items: const <BottomNavigationBarItem>[
+              items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
                   activeIcon: Icon(Icons.home),
@@ -65,7 +71,10 @@ class _MainWrapperState extends State<MainWrapper> {
                   label: 'دسته بندی',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_basket_outlined),
+                  icon: Badge(
+                    label: Text('$orderCount'),
+                    child: Icon(Icons.shopping_basket_outlined),
+                  ),
                   activeIcon: Icon(Icons.shopping_basket),
                   label: 'سبد خرید',
                 ),
@@ -92,7 +101,10 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<CategoriesBloc>(),
         child: const CategoriesScreen(),
       ),
-      const BasketScreen(),
+      BlocProvider(
+        create: (context) => serviceLocator.get<BasketBloc>(),
+        child: const BasketScreen(),
+      ),
       const ProfileScreen(),
     ];
   }
