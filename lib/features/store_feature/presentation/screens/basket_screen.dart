@@ -1,39 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
+import 'package:store_app_clean_architecture/features/store_feature/data/model/product_model.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_event.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_state.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_status.dart';
 
-class BasketScreen extends StatelessWidget {
+class BasketScreen extends StatefulWidget {
   const BasketScreen({super.key});
+
+  @override
+  State<BasketScreen> createState() => _BasketScreenState();
+}
+
+class _BasketScreenState extends State<BasketScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    BlocProvider.of<BasketBloc>(context).add(
+      BasketSendRequestEvent(),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            CustomScrollView(
-              slivers: <Widget>[
-                const CustomHeader(
-                  title: 'سبد خرید',
-                  backButton: false,
-                ),
-                SliverGrid.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    mainAxisExtent: 239,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 24,
+        child: BlocBuilder<BasketBloc, BasketState>(
+          builder: (context, state) {
+            if (state.status is BasketLoadingStatus) {
+              return const CustomScrollView(
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: Text('Loading...'),
                   ),
-                  itemBuilder: (context, index) {
-                    return const BasketCart();
-                  },
-                )
-              ],
-            ),
-            const CompleteBuyButton(),
-          ],
+                ],
+              );
+            }
+            if (state.status is BasketSuccessStatus) {
+              return Stack(
+                children: <Widget>[
+                  CustomScrollView(
+                    slivers: <Widget>[
+                      const CustomHeader(
+                        title: 'سبد خرید',
+                        backButton: false,
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(bottom: 90),
+                        sliver: SliverGrid.builder(
+                          itemCount: (state.status as BasketSuccessStatus)
+                              .orders
+                              .length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            mainAxisExtent: 239,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 24,
+                          ),
+                          itemBuilder: (context, index) {
+                            return BasketCart(
+                              order: (state.status as BasketSuccessStatus)
+                                  .orders[index],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  CompleteBuyButton(
+                      finalPrice:
+                          (state.status as BasketSuccessStatus).payablePrice),
+                ],
+              );
+            } else {
+              return const CustomScrollView(
+                slivers: [],
+              );
+            }
+          },
         ),
       ),
     );
@@ -41,8 +94,10 @@ class BasketScreen extends StatelessWidget {
 }
 
 class CompleteBuyButton extends StatelessWidget {
+  final int finalPrice;
   const CompleteBuyButton({
     super.key,
+    required this.finalPrice,
   });
 
   @override
@@ -67,10 +122,10 @@ class CompleteBuyButton extends StatelessWidget {
               ),
             ],
           ),
-          child: const Center(
+          child: Center(
             child: Text(
-              '300,000,000 تومان - تکمیل فرایند خرید',
-              style: TextStyle(
+              '$finalPrice تومان - تکمیل فرایند خرید',
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -84,8 +139,10 @@ class CompleteBuyButton extends StatelessWidget {
 }
 
 class BasketCart extends StatelessWidget {
+  final OrderEntity order;
   const BasketCart({
     super.key,
+    required this.order,
   });
 
   @override
@@ -119,55 +176,61 @@ class BasketCart extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Image.asset(
-                      'assets/images/pro.png',
-                      fit: BoxFit.cover,
+                    child: CustomCachedImage(
+                      imageUrl: order.mainImageUrl,
+                      fixed: true,
+                      rounded: false,
+                      loadingAnimation: true,
                     ),
                   ),
                   const SizedBox(
                     width: 18,
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'اسم محصول',
-                          style: TextStyle(
+                          order.name,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(
-                          'گارانتی فیلان و اینا',
-                          style: TextStyle(
+                          order.warranty,
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             color: ConstantsColors.grey,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: <Widget>[
                             Text(
-                              '160,000,000  تومان',
-                              style: TextStyle(
+                              order.realPrice.toString(),
+                              style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
                                 color: ConstantsColors.grey,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
-                            CustomBadge(),
+                            CustomBadge(
+                              percent: calcutePercent(
+                                  realPrice: order.realPrice,
+                                  discountPrice: order.discountPrice),
+                            ),
                           ],
                         )
                       ],
@@ -186,12 +249,12 @@ class BasketCart extends StatelessWidget {
             axis: Axis.horizontal,
             dashColor: ConstantsColors.grey,
           ),
-          const Expanded(
+          Expanded(
             flex: 2,
             child: Center(
               child: Text(
-                '160,000,000 تومان',
-                style: TextStyle(
+                '${order.finalPrice} تومان',
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
