@@ -108,8 +108,8 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
           newStatus: DetailProductLoadingStatus(),
         ),
       );
-      final Either<CustomError, String> addBasketResponse =
-          await basketUsecase.callAddToBasket(
+
+      await basketUsecase.callAddToBasket(
         product: event.product,
         variants: event.variants,
       );
