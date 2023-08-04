@@ -62,7 +62,7 @@ class _BasketScreenState extends State<BasketScreen> {
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 1,
-                            mainAxisExtent: 239,
+                            mainAxisExtent: 270,
                             mainAxisSpacing: 20,
                             crossAxisSpacing: 24,
                           ),
@@ -187,7 +187,7 @@ class BasketCart extends StatelessWidget {
                     width: 18,
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,9 +240,6 @@ class BasketCart extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
           const DottedDashedLine(
             height: 1,
             width: double.infinity,
@@ -251,14 +248,83 @@ class BasketCart extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: Center(
-              child: Text(
-                '${order.finalPrice} تومان',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 15,
                 ),
-              ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadiusDirectional.circular(6),
+                          color: ConstantsColors.green,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 35,
+                              color: ConstantsColors.green,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      order.count.toString(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: ConstantsColors.red,
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 35,
+                              color: ConstantsColors.red,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                          borderRadius: BorderRadiusDirectional.circular(6),
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '${order.finalPrice} تومان',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
