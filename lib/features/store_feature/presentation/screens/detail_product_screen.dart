@@ -8,7 +8,6 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/variant_entity.dart';
-import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_state.dart';
