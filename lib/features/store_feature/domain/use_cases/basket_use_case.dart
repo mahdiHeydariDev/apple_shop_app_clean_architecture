@@ -21,4 +21,8 @@ class BasketUsecase {
   Future<Either<CustomError, List<OrderEntity>>> callGetorders() async {
     return await repository.getOrders();
   }
+
+  Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
+    await repository.increaseOrderCount(selectedOrder: selectedOrder);
+  }
 }
