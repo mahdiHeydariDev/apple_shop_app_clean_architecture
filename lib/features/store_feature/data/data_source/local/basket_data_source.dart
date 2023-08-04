@@ -34,4 +34,27 @@ class BasketDataSource {
       throw UknownError();
     }
   }
+
+  //Increase Count of the Order
+  Future<void> increseCountOrder({required OrderEntity selectedOrder}) async {
+    try {
+      final List<OrderEntity> allOrders = ordersBox.values.toList();
+      for (var order in allOrders) {
+        if (order.id == selectedOrder.id) {
+          order.count = order.count + 1;
+        }
+      }
+      await ordersBox.clear();
+      for (var order in allOrders) {
+        await ordersBox.add(order);
+      }
+    } on HiveError catch (exception) {
+      throw ApiEception(
+        exceptionMessage: exception.message,
+        exceptionCode: 0,
+      );
+    } catch (anotherException) {
+      throw UknownError();
+    }
+  }
 }
