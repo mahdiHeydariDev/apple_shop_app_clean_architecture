@@ -258,7 +258,11 @@ class BasketCart extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        BlocProvider.of<BasketBloc>(context).add(
+                          BasketIncreseOrderCount(order: order),
+                        );
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadiusDirectional.circular(6),
@@ -318,7 +322,7 @@ class BasketCart extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  '${order.finalPrice} تومان',
+                  '${(order.finalPrice) * order.count} تومان',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
