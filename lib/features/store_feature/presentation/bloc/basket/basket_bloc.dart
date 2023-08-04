@@ -47,5 +47,34 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         }
       },
     );
+    on<BasketIncreseOrderCount>((event, emit) async {
+      await basketUsecase.increaseOrderCount(selectedOrder: event.order);
+      emit(
+        state.setStatus(
+          BasketLoadingStatus(),
+        ),
+      );
+      final Either<CustomError, List<OrderEntity>> ordersResponse =
+          await basketUsecase.callGetorders();
+      if (ordersResponse.isRight()) {
+        List<OrderEntity>? ordersList;
+
+        ordersResponse.fold(
+            (l) => null, (ordersSuccess) => ordersList = ordersSuccess);
+        int payablePrice = ordersList!.fold(
+          0,
+          (previousValue, element) =>
+              previousValue + (element.finalPrice * element.count),
+        );
+        emit(
+          state.setStatus(
+            BasketSuccessStatus(
+              orders: ordersList!,
+              payablePrice: payablePrice,
+            ),
+          ),
+        );
+      }
+    });
   }
 }
