@@ -76,4 +76,9 @@ class BasketRepositoryImpl extends BasketRepository {
       );
     }
   }
+
+  @override
+  Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
+    dataSource.increseOrderCount(selectedOrder: selectedOrder);
+  }
 }
