@@ -20,10 +20,10 @@ class OrderEntity extends Equatable {
   @HiveField(6)
   final int finalPrice;
   @HiveField(7)
-  final int count;
+  int count;
   @HiveField(8)
   final List<ProductVariantEntity> productVariants;
-  const OrderEntity({
+  OrderEntity({
     required this.id,
     required this.name,
     required this.warranty,
