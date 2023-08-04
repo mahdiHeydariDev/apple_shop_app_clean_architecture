@@ -10,4 +10,5 @@ abstract class BasketRepository {
     required List<ProductVariantEntity> variants,
   });
   Future<Either<CustomError, List<OrderEntity>>> getOrders();
+  Future<void> increaseOrderCount({required OrderEntity selectedOrder});
 }
