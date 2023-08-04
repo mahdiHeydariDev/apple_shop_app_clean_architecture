@@ -36,7 +36,7 @@ class BasketDataSource {
   }
 
   //Increase Count of the Order
-  Future<void> increseCountOrder({required OrderEntity selectedOrder}) async {
+  Future<void> increseOrderCount({required OrderEntity selectedOrder}) async {
     try {
       final List<OrderEntity> allOrders = ordersBox.values.toList();
       for (var order in allOrders) {
