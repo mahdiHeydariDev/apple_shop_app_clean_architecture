@@ -11,4 +11,6 @@ abstract class BasketRepository {
   });
   Future<Either<CustomError, List<OrderEntity>>> getOrders();
   Future<void> increaseOrderCount({required OrderEntity selectedOrder});
+  Future<void> decreaseOrderCount({required OrderEntity selectedOrder});
+  Future<void> deleteOrder({required OrderEntity selectedOrder});
 }
