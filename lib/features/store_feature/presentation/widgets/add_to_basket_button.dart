@@ -12,9 +12,11 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 
 class AddToBasketButton extends StatelessWidget {
   final ProductEntity product;
+  final bool isInBasket;
   const AddToBasketButton({
     super.key,
     required this.product,
+    required this.isInBasket,
   });
 
   @override
@@ -22,15 +24,17 @@ class AddToBasketButton extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () {
-          BlocProvider.of<DetailProductBloc>(context).add(
-            DetailProductAddToBasketEvent(
-              product: product,
-              variants: <ProductVariantEntity>[],
-            ),
-          );
-          BlocProvider.of<BasketBloc>(context).add(
-            BasketSendRequestEvent(),
-          );
+          if (isInBasket == false) {
+            BlocProvider.of<DetailProductBloc>(context).add(
+              DetailProductAddToBasketEvent(
+                product: product,
+                variants: <ProductVariantEntity>[],
+              ),
+            );
+            BlocProvider.of<BasketBloc>(context).add(
+              BasketSendRequestEvent(),
+            );
+          }
         },
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
@@ -57,13 +61,13 @@ class AddToBasketButton extends StatelessWidget {
                     // color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'افزودن به سبد',
+                      isInBasket ? 'در سبد خرید موجود میباشد' : 'افزودن به سبد',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: isInBasket ? 12 : 15,
                       ),
                     ),
                   ),
