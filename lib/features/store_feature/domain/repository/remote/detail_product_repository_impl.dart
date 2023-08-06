@@ -93,16 +93,13 @@ class DetailProductRepositoryImpl extends DetailProductRepository {
       final Response dataSourceResponse =
           await dataSource.getProperties(productId: productId);
       if (dataSourceResponse.statusCode == 200) {
-        print(200);
-        print(dataSourceResponse.data['items']);
         final List<PropertyEntity> propertyList =
             (dataSourceResponse.data['items'] as List)
                 .map<PropertyEntity>(
                   (mapJson) => PropertyModel.fromMapJson(mapJson),
                 )
                 .toList();
-        print('ok');
-        print(propertyList.length);
+
         return Right(propertyList);
       } else {
         return Left(
