@@ -14,6 +14,8 @@ class BasketSuccessStatus extends BasketStatus {
   });
 }
 
+class BasketEmptyStatus extends BasketStatus {}
+
 class BasketFailedStatus extends BasketStatus {
   final CustomError error;
   BasketFailedStatus({
