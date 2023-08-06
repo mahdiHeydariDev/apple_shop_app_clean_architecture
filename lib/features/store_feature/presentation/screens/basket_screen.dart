@@ -5,12 +5,14 @@ import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/model/product_model.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_state.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_status.dart';
+import 'package:zarinpal/zarinpal.dart';
 
 class BasketScreen extends StatefulWidget {
   const BasketScreen({super.key});
@@ -20,13 +22,13 @@ class BasketScreen extends StatefulWidget {
 }
 
 class _BasketScreenState extends State<BasketScreen> {
+  final PaymentRequest _paymentRequest = PaymentRequest();
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     BlocProvider.of<BasketBloc>(context).add(
       BasketSendRequestEvent(),
     );
-    super.initState();
   }
 
   @override
@@ -36,13 +38,7 @@ class _BasketScreenState extends State<BasketScreen> {
         child: BlocBuilder<BasketBloc, BasketState>(
           builder: (context, state) {
             if (state.status is BasketLoadingStatus) {
-              return const CustomScrollView(
-                slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: Text('Loading...'),
-                  ),
-                ],
-              );
+              return const CustomLoading();
             }
             if (state.status is BasketSuccessStatus) {
               return Stack(
@@ -77,13 +73,29 @@ class _BasketScreenState extends State<BasketScreen> {
                     ],
                   ),
                   CompleteBuyButton(
-                      finalPrice:
-                          (state.status as BasketSuccessStatus).payablePrice),
+                    finalPrice:
+                        (state.status as BasketSuccessStatus).payablePrice,
+                    payment: _paymentRequest,
+                  ),
+                ],
+              );
+            }
+            if (state.status is BasketEmptyStatus) {
+              return const CustomScrollView(
+                slivers: <Widget>[
+                  CustomHeader(title: 'سبد خرید'),
+                  SliverToBoxAdapter(
+                    child: EmptyWidget(),
+                  ),
                 ],
               );
             } else {
               return const CustomScrollView(
-                slivers: [],
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: Text('Error'),
+                  )
+                ],
               );
             }
           },
@@ -93,11 +105,50 @@ class _BasketScreenState extends State<BasketScreen> {
   }
 }
 
+class EmptyWidget extends StatelessWidget {
+  const EmptyWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 15,
+          ),
+          child: Image.asset(
+            'assets/images/empty.png',
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.fill,
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        const Text(
+          'هیچ آیتمی در سبد خرید شما وجود ندارد',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: ConstantsColors.blue,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class CompleteBuyButton extends StatelessWidget {
   final int finalPrice;
+  final PaymentRequest payment;
   const CompleteBuyButton({
     super.key,
     required this.finalPrice,
+    required this.payment,
   });
 
   @override
@@ -107,6 +158,11 @@ class CompleteBuyButton extends StatelessWidget {
       right: 24,
       left: 24,
       child: InkWell(
+        onTap: () {
+          BlocProvider.of<BasketBloc>(context).add(
+            BasketPaymentRequestEvent(amount: finalPrice),
+          );
+        },
         child: Container(
           width: double.infinity,
           height: 50,
@@ -296,7 +352,17 @@ class BasketCart extends StatelessWidget {
                       width: 15,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        if (order.count == 1) {
+                          BlocProvider.of<BasketBloc>(context).add(
+                            BasketDeleteOrder(order: order),
+                          );
+                        } else {
+                          BlocProvider.of<BasketBloc>(context).add(
+                            BasketDecreseOrderCount(order: order),
+                          );
+                        }
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: ConstantsColors.red,
@@ -310,8 +376,10 @@ class BasketCart extends StatelessWidget {
                           ],
                           borderRadius: BorderRadiusDirectional.circular(6),
                         ),
-                        child: const Icon(
-                          Icons.delete_outline_rounded,
+                        child: Icon(
+                          order.count == 1
+                              ? Icons.delete_outline_rounded
+                              : Icons.remove_rounded,
                           color: Colors.white,
                         ),
                       ),
