@@ -1,7 +1,7 @@
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 
 class GalleryImageModel extends GalleryImageEntity {
-  GalleryImageModel({
+  const GalleryImageModel({
     required String imageId,
     required String imageUrl,
   }) : super(
