@@ -45,7 +45,6 @@ class _MainWrapperState extends State<MainWrapper> {
                 setState(() {
                   screenIndex = index;
                 });
-                print(screenIndex);
               },
               currentIndex: screenIndex,
               type: BottomNavigationBarType.fixed,
@@ -60,12 +59,12 @@ class _MainWrapperState extends State<MainWrapper> {
                 color: ConstantsColors.grey,
               ),
               items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
                   activeIcon: Icon(Icons.home),
                   label: 'خانه',
                 ),
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   icon: Icon(Icons.category_outlined),
                   activeIcon: Icon(Icons.category),
                   label: 'دسته بندی',
@@ -73,12 +72,12 @@ class _MainWrapperState extends State<MainWrapper> {
                 BottomNavigationBarItem(
                   icon: Badge(
                     label: Text('$orderCount'),
-                    child: Icon(Icons.shopping_basket_outlined),
+                    child: const Icon(Icons.shopping_basket_outlined),
                   ),
-                  activeIcon: Icon(Icons.shopping_basket),
+                  activeIcon: const Icon(Icons.shopping_basket),
                   label: 'سبد خرید',
                 ),
-                BottomNavigationBarItem(
+                const BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline),
                   activeIcon: Icon(Icons.person),
                   label: 'حساب کاربری',
