@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:store_app_clean_architecture/core/constants/constants_api.dart';
+import 'package:store_app_clean_architecture/core/utils/payment_handler.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/local/basket_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/banners_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/category_data_source.dart';
@@ -28,6 +29,10 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 
 var serviceLocator = GetIt.instance;
 Future<void> initGeiIt() async {
+  //util
+  serviceLocator.registerSingleton<PaymentHandler>(
+    ZarinpalPaymentHandler(),
+  );
   //Hive
   serviceLocator.registerSingleton<Box<OrderEntity>>(
     Hive.box<OrderEntity>('orders'),
@@ -153,11 +158,13 @@ Future<void> initGeiIt() async {
       galleryImageUsecase: serviceLocator.get(),
       detailProductUsecase: serviceLocator.get(),
       basketUsecase: serviceLocator.get(),
+      ordersBox: serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<BasketBloc>(
     BasketBloc(
       basketUsecase: serviceLocator.get(),
+      zarinpalPaymentHandler: serviceLocator.get(),
     ),
   );
 }
