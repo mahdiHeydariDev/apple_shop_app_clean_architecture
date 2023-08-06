@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_state.dart';
@@ -35,39 +36,42 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              if (state.status is HomeLoadingStatus) ...[
-                const SliverToBoxAdapter(
-                  child: Text('loading...'),
-                ),
-              ],
-              if (state.status is HomeSuccessStatus) ...[
-                const CustomSearchBox(),
-                SliderCustom(
-                  sliderController: sliderController,
-                  banners: (state.status as HomeSuccessStatus).banners,
-                ),
-                CategorySlider(
-                  categories: (state.status as HomeSuccessStatus).categories,
-                ),
-                ProductsSlider(
-                  title: 'محبوب ترین ها⚡️',
-                  products: (state.status as HomeSuccessStatus).hotestProducts,
-                ),
-                ProductsSlider(
-                  title: 'پرفروش ترین ها🔥',
-                  products:
-                      (state.status as HomeSuccessStatus).bestSellerProducts,
-                ),
-              ],
-              if (state.status is HomeFailedStatus) ...[
-                const SliverToBoxAdapter(
-                  child: Text('failed...'),
-                ),
-              ],
-            ],
-          );
+          if (state.status is HomeLoadingStatus) {
+            return const CustomLoading();
+          }
+          if (state.status is HomeSuccessStatus) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                BlocProvider.of<HomeBloc>(context).add(
+                  HomeSendRequestEvent(),
+                );
+              },
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  const CustomSearchBox(),
+                  SliderCustom(
+                    sliderController: sliderController,
+                    banners: (state.status as HomeSuccessStatus).banners,
+                  ),
+                  CategorySlider(
+                    categories: (state.status as HomeSuccessStatus).categories,
+                  ),
+                  ProductsSlider(
+                    title: 'محبوب ترین ها⚡️',
+                    products:
+                        (state.status as HomeSuccessStatus).hotestProducts,
+                  ),
+                  ProductsSlider(
+                    title: 'پرفروش ترین ها🔥',
+                    products:
+                        (state.status as HomeSuccessStatus).bestSellerProducts,
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Container();
+          }
         },
       )),
     );
