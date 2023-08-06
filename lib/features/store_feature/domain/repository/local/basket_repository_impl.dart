@@ -81,4 +81,14 @@ class BasketRepositoryImpl extends BasketRepository {
   Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
     dataSource.increseOrderCount(selectedOrder: selectedOrder);
   }
+
+  @override
+  Future<void> decreaseOrderCount({required OrderEntity selectedOrder}) async {
+    dataSource.decreseOrderCount(selectedOrder: selectedOrder);
+  }
+
+  @override
+  Future<void> deleteOrder({required OrderEntity selectedOrder}) async {
+    dataSource.deleteOrder(selectedOrder: selectedOrder);
+  }
 }
