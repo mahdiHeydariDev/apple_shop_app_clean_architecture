@@ -13,12 +13,14 @@ class DetailProductSuccessStatus extends DetailProductStatus {
   final List<GalleryImageEntity> galleryImages;
   final List<ProductVariantEntity> productVariants;
   final List<PropertyEntity> properties;
+  final bool isInBasket;
 
   DetailProductSuccessStatus({
     required this.category,
     required this.galleryImages,
     required this.productVariants,
     required this.properties,
+    required this.isInBasket,
   });
 }
 
