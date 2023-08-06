@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_state.dart';
@@ -30,14 +31,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       body: SafeArea(
         child: BlocBuilder<CategoriesBloc, CategoriesState>(
           builder: (context, state) {
-            return CustomScrollView(
-              slivers: <Widget>[
-                if (state.status is CategoriesLoadingStatus) ...[
-                  const SliverToBoxAdapter(
-                    child: Text('Loading...'),
-                  )
-                ],
-                if (state.status is CategoriesSuccessStatus) ...[
+            if (state.status is CategoriesLoadingStatus) {
+              return const CustomLoading();
+            }
+            if (state.status is CategoriesSuccessStatus) {
+              return CustomScrollView(
+                slivers: <Widget>[
                   const CustomHeader(title: 'دسته بندی'),
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -61,13 +60,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     ),
                   )
                 ],
-                if (state.status is CategoriesFailedStatus) ...[
-                  const SliverToBoxAdapter(
-                    child: Text('failed...'),
-                  ),
-                ],
-              ],
-            );
+              );
+            } else {
+              return Container();
+            }
           },
         ),
       ),
