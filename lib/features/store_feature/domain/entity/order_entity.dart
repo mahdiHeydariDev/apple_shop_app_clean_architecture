@@ -1,10 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 part 'order_entity.g.dart';
 
 @HiveType(typeId: 1)
-class OrderEntity extends Equatable {
+class OrderEntity {
   @HiveField(0)
   final String id;
   @HiveField(1)
@@ -34,18 +33,4 @@ class OrderEntity extends Equatable {
     required this.count,
     required this.productVariants,
   });
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [
-        id,
-        name,
-        warranty,
-        mainImageUrl,
-        realPrice,
-        discountPrice,
-        finalPrice,
-        count,
-        productVariants,
-      ];
 }
