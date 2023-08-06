@@ -146,8 +146,8 @@ class ProductCart extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Spacer(),
-                      Text(
+                      const Spacer(),
+                      const Text(
                         'تومان',
                         style: TextStyle(
                           color: Colors.white,
@@ -155,7 +155,7 @@ class ProductCart extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],
