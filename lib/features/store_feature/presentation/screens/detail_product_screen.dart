@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
-import 'package:store_app_clean_architecture/core/utils/generators/color_generator.dart';
+import 'package:store_app_clean_architecture/core/utils/extentions/string_extentions.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
+import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
@@ -38,6 +39,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           galleryImageUsecase: serviceLocator.get(),
           detailProductUsecase: serviceLocator.get(),
           basketUsecase: serviceLocator.get(),
+          ordersBox: serviceLocator.get(),
         );
         bloc.add(
           DetailProductSendRequestEvent(
@@ -53,66 +55,73 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           body: SafeArea(
             child: BlocBuilder<DetailProductBloc, DetailProductState>(
               builder: (context, state) {
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    if (state.status is DetailProductLoadingStatus) ...[
-                      const SliverToBoxAdapter(
-                        child: Text('Loading...'),
-                      )
-                    ],
-                    if (state.status is DetailProductSuccessStatus) ...[
-                      CustomHeader(
-                        title: (state.status as DetailProductSuccessStatus)
-                            .category
-                            .title,
-                        backButton: true,
-                      ),
-                      //header(name of product)
-                      ProductName(name: widget.product.name),
-                      //Product Gallery
-                      ProductGallery(
-                        mainImage: widget.product.thumbnail,
-                        galleryImages:
-                            (state.status as DetailProductSuccessStatus)
-                                .galleryImages,
-                      ),
-                      //select variants
-                      VariantsContainer(
-                        productVariants:
-                            (state.status as DetailProductSuccessStatus)
-                                .productVariants,
-                      ),
-
-                      //drop down box
-                      if (widget.product.description.isNotEmpty) ...[
-                        DescriptionDropDowBox(
-                          isDescription: true,
-                          description: widget.product.description,
+                if (state.status is DetailProductLoadingStatus) {
+                  return const CustomLoading();
+                }
+                if (state.status is DetailProductSuccessStatus) {
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      if (state.status is DetailProductSuccessStatus) ...[
+                        CustomHeader(
+                          title: (state.status as DetailProductSuccessStatus)
+                              .category
+                              .title,
+                          backButton: true,
                         ),
-                      ],
-                      if ((state.status as DetailProductSuccessStatus)
-                          .properties
-                          .isNotEmpty) ...[
-                        DescriptionDropDowBox(
-                          isDescription: false,
-                          properties:
+                        //header(name of product)
+                        ProductName(name: widget.product.name),
+                        //Product Gallery
+                        ProductGallery(
+                          mainImage: widget.product.thumbnail,
+                          galleryImages:
                               (state.status as DetailProductSuccessStatus)
-                                  .properties,
+                                  .galleryImages,
+                        ),
+                        //select variants
+                        VariantsContainer(
+                          productVariants:
+                              (state.status as DetailProductSuccessStatus)
+                                  .productVariants,
+                        ),
+
+                        //drop down box
+                        if (widget.product.description.isNotEmpty) ...[
+                          DescriptionDropDowBox(
+                            isDescription: true,
+                            description: widget.product.description,
+                          ),
+                        ],
+                        if ((state.status as DetailProductSuccessStatus)
+                            .properties
+                            .isNotEmpty) ...[
+                          DescriptionDropDowBox(
+                            isDescription: false,
+                            properties:
+                                (state.status as DetailProductSuccessStatus)
+                                    .properties,
+                          ),
+                        ],
+                        // DescriptionDropDowBox(),
+                        // DescriptionDropDowBox(),
+
+                        //price & a button to add basket
+                        FooterWidget(
+                          product: widget.product,
+                          isInBasket:
+                              (state.status as DetailProductSuccessStatus)
+                                  .isInBasket,
                         ),
                       ],
-                      // DescriptionDropDowBox(),
-                      // DescriptionDropDowBox(),
-
-                      //price & a button to add basket
-                      FooterWidget(product: widget.product),
+                      if (state.status is DetailProductFailedStatus) ...[
+                        const SliverToBoxAdapter(
+                          child: Text('Failed...'),
+                        ),
+                      ],
                     ],
-                    if (state.status is DetailProductFailedStatus) ...[
-                      const SliverToBoxAdapter(
-                        child: Text('Failed...'),
-                      ),
-                    ],
-                  ],
-                );
+                  );
+                } else {
+                  return Container();
+                }
               },
             ),
           ),
@@ -211,7 +220,7 @@ class _ColorVariantGeneratorState extends State<ColorVariantGenerator> {
                     height: 26,
                     decoration: BoxDecoration(
                       color: Color(
-                        colorGenerator(color: widget.colors[index].value),
+                        widget.colors[index].value.convertToColor(),
                       ),
                       borderRadius: BorderRadius.circular(
                         9,
@@ -459,8 +468,10 @@ class ProductName extends StatelessWidget {
 
 class FooterWidget extends StatelessWidget {
   final ProductEntity product;
+  final bool isInBasket;
   const FooterWidget({
     required this.product,
+    required this.isInBasket,
     super.key,
   });
 
@@ -476,7 +487,10 @@ class FooterWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            AddToBasketButton(product: product),
+            AddToBasketButton(
+              product: product,
+              isInBasket: isInBasket,
+            ),
             const SizedBox(
               width: 20,
             ),
