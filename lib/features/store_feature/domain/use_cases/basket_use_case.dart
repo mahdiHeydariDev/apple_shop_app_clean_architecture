@@ -25,4 +25,12 @@ class BasketUsecase {
   Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
     await repository.increaseOrderCount(selectedOrder: selectedOrder);
   }
+
+  Future<void> decreaseOrderCount({required OrderEntity selectedOrder}) async {
+    await repository.decreaseOrderCount(selectedOrder: selectedOrder);
+  }
+
+  Future<void> deleteOrder({required OrderEntity selectedOrder}) async {
+    await repository.deleteOrder(selectedOrder: selectedOrder);
+  }
 }
