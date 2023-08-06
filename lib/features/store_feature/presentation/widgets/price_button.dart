@@ -74,7 +74,7 @@ class PriceButton extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
+                      const Text(
                         'تومان',
                         style: TextStyle(
                           color: Colors.white,
