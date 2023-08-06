@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
-import 'package:store_app_clean_architecture/core/utils/generators/color_generator.dart';
+import 'package:store_app_clean_architecture/core/utils/extentions/string_extentions.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/category_entity.dart';
 
@@ -76,10 +76,10 @@ class CategoryBox extends StatelessWidget {
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
-            color: Color(colorGenerator(color: category.color)),
+            color: Color(category.color.convertToColor()),
             shadows: <BoxShadow>[
               BoxShadow(
-                color: Color(colorGenerator(color: category.color)),
+                color: Color(category.color.convertToColor()),
                 blurRadius: 7,
                 spreadRadius: 1,
                 offset: const Offset(
