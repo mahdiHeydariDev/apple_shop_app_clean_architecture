@@ -35,11 +35,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             await bannersUsecase();
         final Either<CustomError, List<CategoryEntity>> categoriesResponse =
             await categoriesUsecase.callAllCategories();
+
         final Either<CustomError, List<ProductEntity>> hotestProductsResponse =
             await productsUsecase(filter: 'Hotest');
+
         final Either<CustomError, List<ProductEntity>>
             bestSellerProductsResponse =
             await productsUsecase(filter: 'Best Seller');
+
         if (bannersResponse.isRight() &&
             categoriesResponse.isRight() &&
             hotestProductsResponse.isRight() &&
