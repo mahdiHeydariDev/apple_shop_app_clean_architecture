@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
+import 'package:store_app_clean_architecture/core/utils/extentions/num_extentions.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
@@ -180,7 +181,7 @@ class CompleteBuyButton extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              '$finalPrice تومان - تکمیل فرایند خرید',
+              '${finalPrice.priceSeparator()} تومان - تکمیل فرایند خرید',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -272,7 +273,7 @@ class BasketCart extends StatelessWidget {
                         Row(
                           children: <Widget>[
                             Text(
-                              order.realPrice.toString(),
+                              order.realPrice.priceSeparator(),
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -390,7 +391,7 @@ class BasketCart extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  '${(order.finalPrice) * order.count} تومان',
+                  '${((order.finalPrice) * order.count).priceSeparator()} تومان',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

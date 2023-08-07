@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
+import 'package:store_app_clean_architecture/core/utils/extentions/num_extentions.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_badge.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
@@ -128,7 +129,7 @@ class ProductCart extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Text>[
                           Text(
-                            '${product.price}',
+                            product.price.priceSeparator(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -137,7 +138,7 @@ class ProductCart extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${product.realPrice}',
+                            product.realPrice.priceSeparator(),
                             style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
