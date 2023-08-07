@@ -13,4 +13,6 @@ class ConstantsRoutesApi {
   static const String variantsRoutes = 'collections/variants/records';
   //get all product properties
   static const String propertiesRoutes = 'collections/properties/records';
+  //get all comments
+  static const String commentsRoutes = 'collections/comment/records';
 }
