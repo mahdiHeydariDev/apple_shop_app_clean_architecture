@@ -15,4 +15,6 @@ class ConstantsRoutesApi {
   static const String propertiesRoutes = 'collections/properties/records';
   //get all comments
   static const String commentsRoutes = 'collections/comment/records';
+  //post register user
+  static const String userRegisterRoutes = 'collections/users/records';
 }
