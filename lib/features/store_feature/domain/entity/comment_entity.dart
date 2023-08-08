@@ -5,11 +5,16 @@ class CommentEntity extends Equatable {
   final String productId;
   final String text;
   final String userId;
+  final String userAvatarUrl;
+  final String userName;
+
   const CommentEntity({
     required this.id,
     required this.productId,
     required this.text,
     required this.userId,
+    required this.userAvatarUrl,
+    required this.userName,
   });
 
   @override
@@ -18,5 +23,7 @@ class CommentEntity extends Equatable {
         productId,
         text,
         userId,
+        userAvatarUrl,
+        userName,
       ];
 }
