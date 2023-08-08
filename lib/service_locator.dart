@@ -6,26 +6,36 @@ import 'package:store_app_clean_architecture/core/utils/payment_handler.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/local/basket_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/banners_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/category_data_source.dart';
+import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/comments_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/detail_product_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/gallery_product_data_source.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/remote/products_data_source.dart';
+import 'package:store_app_clean_architecture/features/store_feature/data/repository/remote/comments_repository.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/local/basket_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/banners_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/categories_repository_impl.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/comments_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/detail_product_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/gallery_product_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/products_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/banners_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/basket_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/categories_use_case.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/comments_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/detail_product_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/gallery_image_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/use_cases/products_use_case.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
+import 'package:store_app_clean_architecture/features/user_feature/data/data_source/remote/register_user_data_source.dart';
+import 'package:store_app_clean_architecture/features/user_feature/data/repository/remote/register_user_repository.dart';
+import 'package:store_app_clean_architecture/features/user_feature/domain/repository/register_user_repository_impl.dart';
+import 'package:store_app_clean_architecture/features/user_feature/domain/use_case/register_user_use_case.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 
 var serviceLocator = GetIt.instance;
 Future<void> initGeiIt() async {
@@ -76,6 +86,16 @@ Future<void> initGeiIt() async {
       ordersBox: serviceLocator.get(),
     ),
   );
+  serviceLocator.registerSingleton<CommentsDataSource>(
+    CommentsDataSource(
+      dio: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<RegisterUserDataSource>(
+    RegisterUserDataSource(
+      dio: serviceLocator.get(),
+    ),
+  );
   //repositories
   serviceLocator.registerSingleton<BannersRepositoryImpl>(
     BannersRepositoryImpl(
@@ -104,6 +124,17 @@ Future<void> initGeiIt() async {
   );
   serviceLocator.registerSingleton<BasketRepositoryImpl>(
     BasketRepositoryImpl(
+      dataSource: serviceLocator.get(),
+    ),
+  );
+
+  serviceLocator.registerSingleton<CommentsRepository>(
+    CommentsRepositoryImpl(
+      dataSource: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<RegisterUserRepository>(
+    RegisterUserRepositoryImpl(
       dataSource: serviceLocator.get(),
     ),
   );
@@ -139,6 +170,16 @@ Future<void> initGeiIt() async {
       repository: serviceLocator.get(),
     ),
   );
+  serviceLocator.registerSingleton<CommentsUseCase>(
+    CommentsUseCase(
+      repository: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<RegisterUserUseCase>(
+    RegisterUserUseCase(
+      repository: serviceLocator.get(),
+    ),
+  );
   //Bloc
   serviceLocator.registerSingleton<HomeBloc>(
     HomeBloc(
@@ -165,6 +206,16 @@ Future<void> initGeiIt() async {
     BasketBloc(
       basketUsecase: serviceLocator.get(),
       zarinpalPaymentHandler: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<CommentsBloc>(
+    CommentsBloc(
+      useCase: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<RegisterBloc>(
+    RegisterBloc(
+      useCase: serviceLocator.get(),
     ),
   );
 }
