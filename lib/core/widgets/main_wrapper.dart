@@ -12,6 +12,9 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/categories_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/home_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/profile_screen.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/login_screen.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/register_screen.dart';
 import 'package:store_app_clean_architecture/service_locator.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -104,7 +107,12 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<BasketBloc>(),
         child: const BasketScreen(),
       ),
-      const ProfileScreen(),
+      BlocProvider(
+        create: (context) => RegisterBloc(
+          useCase: serviceLocator.get(),
+        ),
+        child: const RegisterScreen(),
+      ),
     ];
   }
 }
