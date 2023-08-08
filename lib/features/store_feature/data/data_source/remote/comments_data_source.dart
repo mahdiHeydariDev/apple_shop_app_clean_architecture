@@ -9,6 +9,7 @@ class CommentsDataSource {
   Future<Response> getComments({required String productId}) async {
     final Map<String, dynamic> queryParams = {
       'filter': 'product_id="$productId"',
+      'expand': 'user_id',
     };
     try {
       final Response response = await dio.get(
