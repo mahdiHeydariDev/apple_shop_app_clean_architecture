@@ -5,10 +5,15 @@ import 'package:store_app_clean_architecture/core/utils/extentions/string_extent
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/features/store_feature/domain/entity/comment_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/variant_entity.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_bloc.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_event.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_state.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_status.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_state.dart';
@@ -101,6 +106,84 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                     .properties,
                           ),
                         ],
+                        SliverToBoxAdapter(
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return BlocProvider(
+                                    create: (context) {
+                                      var bloc = CommentsBloc(
+                                        useCase: serviceLocator.get(),
+                                      );
+                                      bloc.add(
+                                        CommentsSendRequestEvent(
+                                          productId: widget.product.id,
+                                        ),
+                                      );
+                                      return bloc;
+                                    },
+                                    child: const CommentsSection(),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              width: double.infinity,
+                              height: 43,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  width: 1,
+                                  color: ConstantsColors.grey,
+                                ),
+                              ),
+                              child: const Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    'نظرات کاربران',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    'مشاهده نظرات',
+                                    style: TextStyle(
+                                      color: ConstantsColors.blue,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    Icons.open_in_browser_rounded,
+                                    color: ConstantsColors.blue,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                         // DescriptionDropDowBox(),
                         // DescriptionDropDowBox(),
 
@@ -126,6 +209,228 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CommentsSection extends StatelessWidget {
+  const CommentsSection({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CommentsBloc, CommentsState>(
+      builder: (context, state) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: DraggableScrollableSheet(
+            maxChildSize: 1,
+            minChildSize: 0.7,
+            initialChildSize: 0.9,
+            builder: (context, scrollController) {
+              return CustomScrollView(
+                slivers: <Widget>[
+                  if (state.status is CommentsLoadingStatus) ...[
+                    const SliverToBoxAdapter(
+                      child: CustomLoading(),
+                    )
+                  ],
+                  if (state.status is CommentsResponseStatus) ...[
+                    SliverGrid.builder(
+                      itemCount: (state.status as CommentsResponseStatus)
+                          .comments
+                          .length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        mainAxisExtent: 190,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Comment(
+                          comment: (state.status as CommentsResponseStatus)
+                              .comments[index],
+                        );
+                      },
+                    )
+                  ],
+                  if (state.status is CommentsResponseEmptyStatus) ...[
+                    const SliverToBoxAdapter(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Text(
+                            '.نظری برای این محصول ثبت نشده است',
+                            style: TextStyle(
+                              color: ConstantsColors.blue,
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            '.شما اولین نفر باشید',
+                            style: TextStyle(
+                              color: ConstantsColors.green,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                  if (state.status is CommentsErrorStatus) ...[
+                    const SliverToBoxAdapter(
+                      child: Text('Error'),
+                    ),
+                  ],
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class Comment extends StatelessWidget {
+  final CommentEntity comment;
+  const Comment({
+    super.key,
+    required this.comment,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 10,
+      ),
+      padding: const EdgeInsets.all(10),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          width: 1,
+          color: ConstantsColors.grey,
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: CustomCachedImage(
+                  imageUrl: comment.userAvatarUrl,
+                  fixed: true,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(comment.userName.isNotEmpty
+                  ? comment.userName
+                  : 'کاربر اپل لند'),
+              const SizedBox(
+                width: 10,
+              ),
+              const Text(
+                '•',
+                style: TextStyle(
+                  color: ConstantsColors.grey,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Text(
+                '2 روز پیش',
+                style: TextStyle(
+                  color: ConstantsColors.grey,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            comment.text,
+          ),
+          Spacer(),
+          const FooterComment()
+        ],
+      ),
+    );
+  }
+}
+
+class FooterComment extends StatelessWidget {
+  const FooterComment({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        children: <Widget>[
+          const Icon(
+            Icons.favorite_border_rounded,
+            color: ConstantsColors.green,
+          ),
+          const SizedBox(
+            width: 2,
+          ),
+          const Text(
+            '3',
+            style: TextStyle(
+              color: ConstantsColors.green,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          const Icon(
+            Icons.heart_broken_outlined,
+            color: ConstantsColors.red,
+          ),
+          const SizedBox(
+            width: 2,
+          ),
+          const Text(
+            '1',
+            style: TextStyle(
+              color: ConstantsColors.red,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Icon(
+            Icons.report_gmailerrorred_rounded,
+            color: Colors.red[400],
+          ),
+          const SizedBox(
+            width: 2,
+          ),
+          Text(
+            'گزارش',
+            style: TextStyle(color: Colors.red[400]),
+          )
+        ],
       ),
     );
   }
