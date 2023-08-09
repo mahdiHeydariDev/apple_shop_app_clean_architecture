@@ -14,32 +14,64 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             status: RegisterInitStatus(),
           ),
         ) {
+    on<RegisterInitEvent>((event, emit) {
+      emit(
+        state.setStatus(
+          newStatus: RegisterInitStatus(),
+        ),
+      );
+    });
     on<RegisterSendRequestEvent>(
       (event, emit) async {
-        emit(
-          state.setStatus(
-            newStatus: RegisterLoadingStatus(),
-          ),
-        );
-        final RegisterUserParams params = RegisterUserParams(
-          userName: event.userName,
-          password: event.password,
-          confirmPassword: event.passwordConfirm,
-        );
-        final Either<String, String> response =
-            await useCase.call(params: params);
-        if (response.isRight()) {
+        if (event.userName.length <= 4) {
           emit(
             state.setStatus(
-              newStatus: RegisterSuccessResponseStatus(success: ''),
+              newStatus: RegisterInitStatus(errorCode: 1),
             ),
           );
-        } else {
+        } else if (event.password.length <= 7) {
           emit(
             state.setStatus(
-              newStatus: RegisterFailedResponseStatus(error: ''),
+              newStatus: RegisterInitStatus(errorCode: 2),
             ),
           );
+        } else if (event.password != event.passwordConfirm) {
+          emit(
+            state.setStatus(
+              newStatus: RegisterInitStatus(errorCode: 3),
+            ),
+          );
+        } else if (event.userName.length >= 5 &&
+            event.password.length >= 8 &&
+            event.password == event.passwordConfirm) {
+          final RegisterUserParams params = RegisterUserParams(
+            userName: event.userName,
+            password: event.password,
+            confirmPassword: event.passwordConfirm,
+          );
+          emit(
+            state.setStatus(
+              newStatus: RegisterLoadingStatus(),
+            ),
+          );
+          final Either<int, String> response =
+              await useCase.call(params: params);
+          if (response.isRight()) {
+            emit(
+              state.setStatus(
+                newStatus: RegisterSuccessResponseStatus(success: ''),
+              ),
+            );
+          } else {
+            int errorCode = 0;
+            response.fold((error) => errorCode = error, (r) => null);
+
+            emit(
+              state.setStatus(
+                newStatus: RegisterInitStatus(errorCode: errorCode),
+              ),
+            );
+          }
         }
       },
     );
