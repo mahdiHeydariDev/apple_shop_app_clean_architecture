@@ -1,6 +1,12 @@
 class RegisterStatus {}
 
-class RegisterInitStatus extends RegisterStatus {}
+class RegisterInitStatus extends RegisterStatus {
+  int errorCode;
+  RegisterInitStatus({this.errorCode = 0});
+  RegisterInitStatus changeCode({required int code}) {
+    return RegisterInitStatus(errorCode: code);
+  }
+}
 
 class RegisterLoadingStatus extends RegisterStatus {}
 
@@ -10,6 +16,6 @@ class RegisterSuccessResponseStatus extends RegisterStatus {
 }
 
 class RegisterFailedResponseStatus extends RegisterStatus {
-  final String error;
+  final int error;
   RegisterFailedResponseStatus({required this.error});
 }
