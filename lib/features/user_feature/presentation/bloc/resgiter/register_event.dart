@@ -1,5 +1,7 @@
 class RegisterEvent {}
 
+class RegisterInitEvent extends RegisterEvent {}
+
 class RegisterSendRequestEvent extends RegisterEvent {
   final String userName;
   final String password;
