@@ -5,8 +5,7 @@ import 'package:store_app_clean_architecture/features/user_feature/data/reposito
 class RegisterUserUseCase {
   final RegisterUserRepository repository;
   RegisterUserUseCase({required this.repository});
-  Future<Either<String, String>> call(
-      {required RegisterUserParams params}) async {
+  Future<Either<int, String>> call({required RegisterUserParams params}) async {
     return await repository.registerUser(params: params);
   }
 }
