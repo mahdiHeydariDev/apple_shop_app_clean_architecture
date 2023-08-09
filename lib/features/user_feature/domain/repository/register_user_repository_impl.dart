@@ -10,22 +10,22 @@ class RegisterUserRepositoryImpl extends RegisterUserRepository {
   final RegisterUserDataSource dataSource;
   RegisterUserRepositoryImpl({required this.dataSource});
   @override
-  Future<Either<String, String>> registerUser(
+  Future<Either<int, String>> registerUser(
       {required RegisterUserParams params}) async {
     try {
       final Response dataSourceResponse =
           await dataSource.registerUser(params: params);
       if (dataSourceResponse.statusCode == 200) {
-        return const Right('Success');
+        return const Right('');
       } else {
-        return const Left('Failed');
+        return const Left(0);
       }
-    } on ApiEception catch (_) {
-      return const Right('Failed');
+    } on ApiEception catch (apiException) {
+      return Left(apiException.exceptionCode);
     } on UknownError catch (_) {
-      return const Right('Failed');
+      return const Left(0);
     } catch (_) {
-      return const Right('Failed');
+      return const Left(0);
     }
   }
 }
