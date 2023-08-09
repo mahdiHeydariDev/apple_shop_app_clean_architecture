@@ -8,19 +8,18 @@ class RegisterUserDataSource {
   final Dio dio;
   RegisterUserDataSource({required this.dio});
   Future<Response> registerUser({required RegisterUserParams params}) async {
-    final Map<String, String> data = {
-      'username': params.userName,
-      'password': params.password,
-      'passwordConfirm': params.confirmPassword,
-    };
     try {
       final Response response = await dio.post(
         ConstantsRoutesApi.userRegisterRoutes,
-        data: data,
+        data: {
+          "username": params.userName,
+          "password": params.password,
+          "passwordConfirm": params.confirmPassword,
+        },
       );
+
       return response;
     } on DioException catch (exception) {
-      //If the connection was not successful
       throw ApiEception(
         exceptionMessage: exception.response!.statusMessage!,
         exceptionCode: exception.response!.statusCode!,
