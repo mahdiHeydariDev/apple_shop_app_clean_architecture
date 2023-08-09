@@ -31,9 +31,13 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_bloc.dart';
+import 'package:store_app_clean_architecture/features/user_feature/data/data_source/remote/login_user_data_source.dart';
 import 'package:store_app_clean_architecture/features/user_feature/data/data_source/remote/register_user_data_source.dart';
+import 'package:store_app_clean_architecture/features/user_feature/data/repository/remote/login_user_repository.dart';
 import 'package:store_app_clean_architecture/features/user_feature/data/repository/remote/register_user_repository.dart';
+import 'package:store_app_clean_architecture/features/user_feature/domain/repository/login_user_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/user_feature/domain/repository/register_user_repository_impl.dart';
+import 'package:store_app_clean_architecture/features/user_feature/domain/use_case/login_user_use_case.dart';
 import 'package:store_app_clean_architecture/features/user_feature/domain/use_case/register_user_use_case.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 
@@ -96,6 +100,11 @@ Future<void> initGeiIt() async {
       dio: serviceLocator.get(),
     ),
   );
+  serviceLocator.registerSingleton<LoginUserDataSource>(
+    LoginUserDataSource(
+      dio: serviceLocator.get(),
+    ),
+  );
   //repositories
   serviceLocator.registerSingleton<BannersRepositoryImpl>(
     BannersRepositoryImpl(
@@ -135,6 +144,11 @@ Future<void> initGeiIt() async {
   );
   serviceLocator.registerSingleton<RegisterUserRepository>(
     RegisterUserRepositoryImpl(
+      dataSource: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<LoginUserRepository>(
+    LoginUserRepositoryImpl(
       dataSource: serviceLocator.get(),
     ),
   );
@@ -178,6 +192,11 @@ Future<void> initGeiIt() async {
   serviceLocator.registerSingleton<RegisterUserUseCase>(
     RegisterUserUseCase(
       repository: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<LoginUserUseCase>(
+    LoginUserUseCase(
+      serviceLocator.get(),
     ),
   );
   //Bloc
