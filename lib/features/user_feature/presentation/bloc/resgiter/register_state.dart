@@ -4,10 +4,6 @@ class RegisterState {
   final RegisterStatus status;
   RegisterState({required this.status});
   RegisterState setStatus({required RegisterStatus newStatus}) {
-    if (newStatus != status) {
-      return RegisterState(status: newStatus);
-    } else {
-      return RegisterState(status: status);
-    }
+    return RegisterState(status: newStatus);
   }
 }
