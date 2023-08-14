@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/constants/constants_text/form_text.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/login/login_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_event.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_state.dart';
@@ -12,6 +13,7 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/custom_text_field.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/form_container.dart';
+import 'package:store_app_clean_architecture/service_locator.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -53,7 +55,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return const LoginScreen();
+                                    return BlocProvider(
+                                      create: (context) => LoginBloc(
+                                        serviceLocator.get(),
+                                      ),
+                                      child: const LoginScreen(),
+                                    );
                                   },
                                 ),
                               );
