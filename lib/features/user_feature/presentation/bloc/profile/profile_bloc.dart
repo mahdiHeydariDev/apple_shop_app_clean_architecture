@@ -5,7 +5,8 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_status.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc()
+  final SharedPreferences _pref;
+  ProfileBloc(this._pref)
       : super(
           ProfileState(
             status: ProfileInitStatus(),
@@ -18,8 +19,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             newStatus: ProfileLoadingStatus(),
           ),
         );
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        final String? token = prefs.getString('token');
+
+        final String? token = _pref.getString('token');
         if (token != null) {
           emit(
             state.setStaus(
@@ -36,8 +37,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       },
     );
     on<ProfileLogoutSessionEvent>((event, emit) async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token');
+      await _pref.remove('token');
       emit(
         state.setStaus(
           newStatus: ProfileDoesntLoginStatus(),

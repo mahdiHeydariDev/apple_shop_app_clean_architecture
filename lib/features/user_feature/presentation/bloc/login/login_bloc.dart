@@ -9,12 +9,20 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUserUseCase _useCase;
-  LoginBloc(this._useCase)
-      : super(
+  final SharedPreferences _pref;
+  LoginBloc(
+    this._useCase,
+    this._pref,
+  ) : super(
           LoginState(
             status: LoginInitStatus(),
           ),
         ) {
+    on<LoginInitEvent>((event, emit) {
+      state.setStatus(
+        newStatus: LoginInitStatus(),
+      );
+    });
     on<LoginSendRequestEvent>(
       (event, emit) async {
         emit(
@@ -31,8 +39,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (response.isRight()) {
           String? userToken;
           response.fold((l) => null, (token) => userToken = token);
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', userToken!);
+
+          await _pref.setString('token', userToken!);
+          print(_pref.get('token'));
 
           emit(
             state.setStatus(
@@ -42,11 +51,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else if (response.isLeft()) {
           int errorCode = 0;
           response.fold((error) => errorCode = error, (r) => null);
-          emit(
-            state.setStatus(
-              newStatus: LoginInitStatus(error: errorCode),
-            ),
-          );
+          if (errorCode == 400) {
+            emit(
+              state.setStatus(
+                newStatus: LoginInitStatus(error: errorCode),
+              ),
+            );
+          } else {
+            emit(
+              state.setStatus(
+                newStatus: LoginFailedResponseStatus(error: 0),
+              ),
+            );
+          }
         }
       },
     );
