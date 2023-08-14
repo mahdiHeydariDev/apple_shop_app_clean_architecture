@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app_clean_architecture/core/constants/constants_api.dart';
 import 'package:store_app_clean_architecture/core/utils/payment_handler.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/local/basket_data_source.dart';
@@ -39,6 +40,7 @@ import 'package:store_app_clean_architecture/features/user_feature/domain/reposi
 import 'package:store_app_clean_architecture/features/user_feature/domain/repository/register_user_repository_impl.dart';
 import 'package:store_app_clean_architecture/features/user_feature/domain/use_case/login_user_use_case.dart';
 import 'package:store_app_clean_architecture/features/user_feature/domain/use_case/register_user_use_case.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 
 var serviceLocator = GetIt.instance;
@@ -46,6 +48,9 @@ Future<void> initGeiIt() async {
   //util
   serviceLocator.registerSingleton<PaymentHandler>(
     ZarinpalPaymentHandler(),
+  );
+  serviceLocator.registerSingleton<SharedPreferences>(
+    await SharedPreferences.getInstance(),
   );
   //Hive
   serviceLocator.registerSingleton<Box<OrderEntity>>(
@@ -235,6 +240,11 @@ Future<void> initGeiIt() async {
   serviceLocator.registerSingleton<RegisterBloc>(
     RegisterBloc(
       useCase: serviceLocator.get(),
+    ),
+  );
+  serviceLocator.registerSingleton<ProfileBloc>(
+    ProfileBloc(
+      serviceLocator.get(),
     ),
   );
 }
