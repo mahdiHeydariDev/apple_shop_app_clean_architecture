@@ -16,7 +16,7 @@ class LoginUserRepositoryImpl extends LoginUserRepository {
       final Response dataSourceResponse =
           await dataSource.loginUser(params: sentParams);
       if (dataSourceResponse.statusCode == 200) {
-        return const Right('Success!');
+        return Right(dataSourceResponse.data['token']);
       } else {
         return const Left(0);
       }
