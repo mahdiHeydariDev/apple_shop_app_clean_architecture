@@ -65,12 +65,19 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           } else {
             int errorCode = 0;
             response.fold((error) => errorCode = error, (r) => null);
-
-            emit(
-              state.setStatus(
-                newStatus: RegisterInitStatus(errorCode: errorCode),
-              ),
-            );
+            if (errorCode == 400) {
+              emit(
+                state.setStatus(
+                  newStatus: RegisterInitStatus(errorCode: errorCode),
+                ),
+              );
+            } else {
+              emit(
+                state.setStatus(
+                  newStatus: RegisterFailedResponseStatus(error: 0),
+                ),
+              );
+            }
           }
         }
       },
