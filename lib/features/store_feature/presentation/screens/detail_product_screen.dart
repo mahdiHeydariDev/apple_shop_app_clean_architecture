@@ -5,6 +5,7 @@ import 'package:store_app_clean_architecture/core/utils/extentions/string_extent
 import 'package:store_app_clean_architecture/core/widgets/custom_cachedimage.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/core/widgets/server_error.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/comment_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
@@ -195,13 +196,11 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                                   .isInBasket,
                         ),
                       ],
-                      if (state.status is DetailProductFailedStatus) ...[
-                        const SliverToBoxAdapter(
-                          child: Text('Failed...'),
-                        ),
-                      ],
                     ],
                   );
+                }
+                if (state.status is DetailProductFailedStatus) {
+                  return const ServerError();
                 } else {
                   return Container();
                 }
@@ -209,6 +208,104 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class NetworkErrorWidgte extends StatelessWidget {
+  final String categoryId;
+  final String productId;
+  const NetworkErrorWidgte({
+    super.key,
+    required this.categoryId,
+    required this.productId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24,
+      ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadiusDirectional.circular(15),
+      ),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(
+            height: 50,
+          ),
+          SizedBox(
+            width: 120,
+            height: 120,
+            child: Image.asset(
+              'assets/images/brokenconnection.png',
+              fit: BoxFit.cover,
+              color: ConstantsColors.blue,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            'اتصال اینترنت شما وجود ندارد!',
+            style: TextStyle(
+              color: ConstantsColors.blue,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          const Text(
+            'لطفاً اتصال اینترنتی خود را برقرار کنید و دوباره امتحان نمایید.',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          InkWell(
+            onTap: () {
+              BlocProvider.of<DetailProductBloc>(context).add(
+                DetailProductSendRequestEvent(
+                  id: categoryId,
+                  productId: productId,
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: ConstantsColors.blue,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'تلاش مجدد',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Icon(
+                    Icons.refresh_rounded,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -230,14 +327,12 @@ class CommentsSection extends StatelessWidget {
             minChildSize: 0.7,
             initialChildSize: 0.9,
             builder: (context, scrollController) {
-              return CustomScrollView(
-                slivers: <Widget>[
-                  if (state.status is CommentsLoadingStatus) ...[
-                    const SliverToBoxAdapter(
-                      child: CustomLoading(),
-                    )
-                  ],
-                  if (state.status is CommentsResponseStatus) ...[
+              if (state.status is CommentsLoadingStatus) {
+                return CustomLoading();
+              }
+              if (state.status is CommentsResponseStatus) {
+                return CustomScrollView(
+                  slivers: <Widget>[
                     SliverGrid.builder(
                       itemCount: (state.status as CommentsResponseStatus)
                           .comments
@@ -253,10 +348,14 @@ class CommentsSection extends StatelessWidget {
                               .comments[index],
                         );
                       },
-                    )
+                    ),
                   ],
-                  if (state.status is CommentsResponseEmptyStatus) ...[
-                    const SliverToBoxAdapter(
+                );
+              }
+              if (state.status is CommentsResponseEmptyStatus) {
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
                       child: Column(
                         children: <Widget>[
                           SizedBox(
@@ -283,13 +382,13 @@ class CommentsSection extends StatelessWidget {
                       ),
                     )
                   ],
-                  if (state.status is CommentsErrorStatus) ...[
-                    const SliverToBoxAdapter(
-                      child: Text('Error'),
-                    ),
-                  ],
-                ],
-              );
+                );
+              }
+              if (state.status is CommentsErrorStatus) {
+                return const ServerError();
+              } else {
+                return Container();
+              }
             },
           ),
         );
