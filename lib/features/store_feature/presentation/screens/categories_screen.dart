@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/core/widgets/server_error.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_event.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_state.dart';
@@ -61,6 +62,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   )
                 ],
               );
+            }
+            if (state.status is CategoriesFailedStatus) {
+              return const ServerError();
             } else {
               return Container();
             }
