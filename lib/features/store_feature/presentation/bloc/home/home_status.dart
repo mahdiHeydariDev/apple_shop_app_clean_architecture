@@ -9,6 +9,8 @@ class HomeInitStatus extends HomeStatus {}
 
 class HomeLoadingStatus extends HomeStatus {}
 
+class HomeNotConnectionStatus extends HomeStatus {}
+
 class HomeSuccessStatus extends HomeStatus {
   final List<BannerEntity> banners;
   final List<CategoryEntity> categories;
