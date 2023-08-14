@@ -109,7 +109,7 @@ class _MainWrapperState extends State<MainWrapper> {
         child: const BasketScreen(),
       ),
       BlocProvider(
-        create: (context) => ProfileBloc(),
+        create: (context) => serviceLocator.get<ProfileBloc>(),
         child: const ProfileScreen(),
       ),
     ];
