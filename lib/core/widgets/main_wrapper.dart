@@ -11,6 +11,7 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/basket_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/categories_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/home_screen.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/profile_screen.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/login_screen.dart';
@@ -107,7 +108,10 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<BasketBloc>(),
         child: const BasketScreen(),
       ),
-      const ProfileScreen(),
+      BlocProvider(
+        create: (context) => ProfileBloc(),
+        child: const ProfileScreen(),
+      ),
     ];
   }
 }
