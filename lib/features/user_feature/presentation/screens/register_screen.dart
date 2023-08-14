@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/constants/constants_text/form_text.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/core/widgets/server_error.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/login/login_bloc.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_event.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_state.dart';
@@ -55,10 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return BlocProvider(
-                                      create: (context) => LoginBloc(
-                                        serviceLocator.get(),
-                                      ),
+                                    return BlocProvider.value(
+                                      value: serviceLocator.get<ProfileBloc>(),
                                       child: const LoginScreen(),
                                     );
                                   },
@@ -160,6 +160,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               }
               if (state.status is RegisterLoadingStatus) {
                 return const CustomLoading();
+              }
+              if (state.status is RegisterFailedResponseStatus) {
+                return const ServerError();
               }
 
               return Container();
