@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
+import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/login/login_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_event.dart';
@@ -33,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    checkNetwork();
     return Scaffold(
       body: SafeArea(child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -95,10 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => BlocProvider(
-                                        create: (context) => LoginBloc(
-                                          serviceLocator.get(),
-                                        ),
+                                      builder: (context) => BlocProvider.value(
+                                        value:
+                                            serviceLocator.get<ProfileBloc>(),
                                         child: const LoginScreen(),
                                       ),
                                     ),
@@ -231,4 +233,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       )),
     );
   }
+
+  Future<void> checkNetwork() async {}
 }
