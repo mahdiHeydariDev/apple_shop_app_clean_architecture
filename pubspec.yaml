@@ -28,12 +28,11 @@ dependencies:
   url_launcher: ^6.1.12
   uni_links: ^0.5.1
   intl: ^0.18.1
-  # flutter_secure_storage: ^8.0.0 //this work just on 18 and more android sdk . so we can't use it.
+  # flutter_secure_storage: ^8.0.0 #this work just on 18 and more android sdk . so we can't use it.
   shared_preferences: ^2.2.0
-
-
-  
+  # connectivity_plus: ^4.0.2 #this work just on 19 and more android sdk . so we can't use it.
   cupertino_icons: ^1.0.2
+  internet_connection_checker: ^1.0.0+1 
 
 dev_dependencies:
   flutter_test:
