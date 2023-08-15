@@ -12,7 +12,6 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/products_slider.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/search_box.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/widgets/slider.dart';
-import 'package:store_app_clean_architecture/service_locator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -110,7 +109,7 @@ class NetworkErrorWidgte extends StatelessWidget {
       ),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadiusDirectional.circular(15),
       ),
       child: Column(

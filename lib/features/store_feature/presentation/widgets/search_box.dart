@@ -16,17 +16,17 @@ class CustomSearchBox extends StatelessWidget {
           width: double.infinity,
           height: 46.0,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(15),
-            boxShadow: const <BoxShadow>[
+            boxShadow: <BoxShadow>[
               BoxShadow(
                 blurRadius: 15,
                 spreadRadius: 1,
-                offset: Offset(
+                offset: const Offset(
                   0,
                   5,
                 ),
-                color: ConstantsColors.grey,
+                color: Theme.of(context).shadowColor,
               ),
             ],
           ),

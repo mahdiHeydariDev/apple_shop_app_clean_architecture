@@ -51,7 +51,7 @@ class ProductsSlider extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 266.0,
+            height: 250,
             child: Padding(
               padding: const EdgeInsets.only(right: 14),
               child: ListView.builder(

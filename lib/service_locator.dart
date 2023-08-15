@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_app_clean_architecture/core/bloc/theme/theme_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constants_api.dart';
 import 'package:store_app_clean_architecture/core/utils/payment_handler.dart';
 import 'package:store_app_clean_architecture/features/store_feature/data/data_source/local/basket_data_source.dart';
@@ -51,6 +52,9 @@ Future<void> initGeiIt() async {
   );
   serviceLocator.registerSingleton<SharedPreferences>(
     await SharedPreferences.getInstance(),
+  );
+  serviceLocator.registerSingleton<ThemeBloc>(
+    ThemeBloc(),
   );
   //Hive
   serviceLocator.registerSingleton<Box<OrderEntity>>(

@@ -142,7 +142,7 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
                               width: double.infinity,
                               height: 43,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   width: 1,
@@ -213,104 +213,6 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
   }
 }
 
-class NetworkErrorWidgte extends StatelessWidget {
-  final String categoryId;
-  final String productId;
-  const NetworkErrorWidgte({
-    super.key,
-    required this.categoryId,
-    required this.productId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 24,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-      ),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadiusDirectional.circular(15),
-      ),
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 50,
-          ),
-          SizedBox(
-            width: 120,
-            height: 120,
-            child: Image.asset(
-              'assets/images/brokenconnection.png',
-              fit: BoxFit.cover,
-              color: ConstantsColors.blue,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            'اتصال اینترنت شما وجود ندارد!',
-            style: TextStyle(
-              color: ConstantsColors.blue,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text(
-            'لطفاً اتصال اینترنتی خود را برقرار کنید و دوباره امتحان نمایید.',
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          InkWell(
-            onTap: () {
-              BlocProvider.of<DetailProductBloc>(context).add(
-                DetailProductSendRequestEvent(
-                  id: categoryId,
-                  productId: productId,
-                ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-              ),
-              decoration: BoxDecoration(
-                color: ConstantsColors.blue,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'تلاش مجدد',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Icon(
-                    Icons.refresh_rounded,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class CommentsSection extends StatelessWidget {
   const CommentsSection({
     super.key,
@@ -328,7 +230,7 @@ class CommentsSection extends StatelessWidget {
             initialChildSize: 0.9,
             builder: (context, scrollController) {
               if (state.status is CommentsLoadingStatus) {
-                return CustomLoading();
+                return const CustomLoading();
               }
               if (state.status is CommentsResponseStatus) {
                 return CustomScrollView(
@@ -687,7 +589,7 @@ class _StorageVariantGeneratorState extends State<StorageVariantGenerator> {
                     width: 67,
                     height: 26,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(9),
                       border: Border.all(
                         color: currentSelected == index
@@ -703,7 +605,7 @@ class _StorageVariantGeneratorState extends State<StorageVariantGenerator> {
                         style: TextStyle(
                           color: currentSelected == index
                               ? ConstantsColors.blue
-                              : Colors.black,
+                              : Colors.white,
                         ),
                       ),
                     ),
@@ -742,7 +644,7 @@ class _ProductGalleryState extends State<ProductGallery> {
           width: double.infinity,
           height: 284,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(

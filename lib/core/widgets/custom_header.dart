@@ -24,7 +24,7 @@ class CustomHeader extends StatelessWidget {
           width: double.infinity,
           height: 46,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadiusDirectional.circular(15),
           ),
           child: Stack(

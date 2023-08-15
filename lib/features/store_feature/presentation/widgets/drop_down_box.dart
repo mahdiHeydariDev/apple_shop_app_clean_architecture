@@ -36,7 +36,7 @@ class _DescriptionDropDowBoxState extends State<DescriptionDropDowBox> {
                 width: double.infinity,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     color: ConstantsColors.grey,
@@ -84,7 +84,7 @@ class _DescriptionDropDowBoxState extends State<DescriptionDropDowBox> {
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.symmetric(vertical: 20),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
                           color: ConstantsColors.grey,

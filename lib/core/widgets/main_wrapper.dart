@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:store_app_clean_architecture/core/bloc/theme/theme_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
@@ -11,11 +12,7 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/basket_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/categories_screen.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/screens/home_screen.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/profile_screen.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/login_screen.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/register_screen.dart';
 import 'package:store_app_clean_architecture/service_locator.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -52,10 +49,8 @@ class _MainWrapperState extends State<MainWrapper> {
               },
               currentIndex: screenIndex,
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.transparent,
               elevation: 0,
               selectedItemColor: ConstantsColors.blue,
-              unselectedItemColor: ConstantsColors.grey,
               selectedLabelStyle: const TextStyle(
                 color: ConstantsColors.blue,
               ),
@@ -108,8 +103,8 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<BasketBloc>(),
         child: const BasketScreen(),
       ),
-      BlocProvider(
-        create: (context) => serviceLocator.get<ProfileBloc>(),
+      BlocProvider.value(
+        value: serviceLocator.get<ThemeBloc>(),
         child: const ProfileScreen(),
       ),
     ];

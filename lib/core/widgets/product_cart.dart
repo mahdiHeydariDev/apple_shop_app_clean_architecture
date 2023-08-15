@@ -36,7 +36,7 @@ class ProductCart extends StatelessWidget {
             height: 216.0,
             margin: const EdgeInsets.only(left: 10, right: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(

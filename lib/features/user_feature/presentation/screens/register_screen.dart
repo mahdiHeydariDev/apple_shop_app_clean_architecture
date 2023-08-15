@@ -4,7 +4,6 @@ import 'package:store_app_clean_architecture/core/constants/constant_colors.dart
 import 'package:store_app_clean_architecture/core/constants/constants_text/form_text.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
 import 'package:store_app_clean_architecture/core/widgets/server_error.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/login/login_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_event.dart';
@@ -33,7 +32,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: ConstantsColors.background,
         body: SafeArea(
           child: BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {

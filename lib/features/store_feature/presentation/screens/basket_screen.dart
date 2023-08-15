@@ -209,13 +209,13 @@ class BasketCart extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
-        boxShadow: const <BoxShadow>[
+        color: Theme.of(context).cardColor,
+        boxShadow: <BoxShadow>[
           BoxShadow(
             spreadRadius: 1,
             blurRadius: 16,
-            offset: Offset(0, 5),
-            color: Colors.grey,
+            offset: const Offset(0, 5),
+            color: Theme.of(context).shadowColor,
           )
         ],
       ),

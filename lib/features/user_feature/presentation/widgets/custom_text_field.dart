@@ -71,7 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Theme.of(context).cardColor,
               prefixIcon: Icon(
                 widget.icon,
                 size: 30,

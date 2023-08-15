@@ -10,8 +10,6 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/login/login_status.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_bloc.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_event.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/profile/profile_status.dart';
-import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/profile_screen.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/custom_button.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/custom_text_field.dart';
@@ -44,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          backgroundColor: ConstantsColors.background,
           body: SafeArea(child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
               if (state.status is LoginLoadingStatus) {
@@ -53,7 +50,9 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state.status is LoginInitStatus) {
                 return CustomScrollView(
                   slivers: <Widget>[
-                    const CustomFormHeader(text: 'ورود به اپل لند'),
+                    const CustomFormHeader(
+                      text: 'ورود به اپل لند',
+                    ),
                     FormContainer(
                       fields: [
                         CustomTextField(
