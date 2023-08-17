@@ -109,6 +109,7 @@ class ProductCart extends StatelessWidget {
                       BoxShadow(
                         color: ConstantsColors.blue,
                         blurRadius: 5,
+                        spreadRadius: 0.5,
                         offset: Offset(0, 3),
                       ),
                     ],
