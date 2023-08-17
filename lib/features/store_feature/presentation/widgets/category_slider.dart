@@ -80,11 +80,11 @@ class CategoryBox extends StatelessWidget {
             shadows: <BoxShadow>[
               BoxShadow(
                 color: Color(category.color.convertToColor()),
-                blurRadius: 7,
-                spreadRadius: 1,
+                blurRadius: 5,
+                spreadRadius: 0.5,
                 offset: const Offset(
                   0,
-                  1,
+                  3,
                 ),
               )
             ],
