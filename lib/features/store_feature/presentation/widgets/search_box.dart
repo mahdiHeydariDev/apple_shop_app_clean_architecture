@@ -20,11 +20,11 @@ class CustomSearchBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                blurRadius: 15,
-                spreadRadius: 1,
+                blurRadius: 5,
+                spreadRadius: 0.5,
                 offset: const Offset(
                   0,
-                  5,
+                  3,
                 ),
                 color: Theme.of(context).shadowColor,
               ),
