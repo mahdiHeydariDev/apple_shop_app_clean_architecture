@@ -8,7 +8,6 @@ class GalleryImageEntity extends Equatable {
     required this.imageUrl,
   });
   @override
-  // TODO: implement props
   List<Object?> get props => [
         imageId,
         imageUrl,
