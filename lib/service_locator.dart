@@ -71,78 +71,78 @@ Future<void> initGeiIt() async {
   //data sources
   serviceLocator.registerSingleton<BannersDataSource>(
     BannersDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<CategoryDataSource>(
     CategoryDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<ProductsDataSource>(
     ProductsDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<GalleryProductDataSource>(
     GalleryProductDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<DetailProductDatasource>(
     DetailProductDatasource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<BasketDataSource>(
     BasketDataSource(
-      ordersBox: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<CommentsDataSource>(
     CommentsDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<RegisterUserDataSource>(
     RegisterUserDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<LoginUserDataSource>(
     LoginUserDataSource(
-      dio: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   //repositories
   serviceLocator.registerSingleton<BannersRepositoryImpl>(
     BannersRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<CategoriesRepositoryImpl>(
     CategoriesRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<ProductsRepositoryImpl>(
     ProductsRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<GalleryProductRepositoryImpl>(
     GalleryProductRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<DetailProductRepositoryImpl>(
     DetailProductRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
   serviceLocator.registerSingleton<BasketRepositoryImpl>(
     BasketRepositoryImpl(
-      dataSource: serviceLocator.get(),
+      serviceLocator.get(),
     ),
   );
 
