@@ -7,9 +7,10 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 import 'package:store_app_clean_architecture/features/user_feature/presentation/bloc/resgiter/register_status.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  final RegisterUserUseCase useCase;
-  RegisterBloc({required this.useCase})
-      : super(
+  final RegisterUserUseCase _useCase;
+  RegisterBloc({required RegisterUserUseCase useCase})
+      : _useCase = useCase,
+        super(
           RegisterState(
             status: RegisterInitStatus(),
           ),
@@ -55,7 +56,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             ),
           );
           final Either<int, String> response =
-              await useCase.call(params: params);
+              await _useCase.call(params: params);
           if (response.isRight()) {
             emit(
               state.setStatus(
