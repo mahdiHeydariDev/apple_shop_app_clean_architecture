@@ -22,7 +22,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     BlocProvider.of<CategoriesBloc>(context).add(
       CategoriesSendRequestEvent(),
     );
-    // TODO: implement initState
+
     super.initState();
   }
 
