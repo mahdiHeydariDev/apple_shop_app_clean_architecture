@@ -172,9 +172,9 @@ class CompleteBuyButton extends StatelessWidget {
             borderRadius: BorderRadiusDirectional.circular(15),
             boxShadow: const <BoxShadow>[
               BoxShadow(
-                spreadRadius: 2,
-                blurRadius: 10,
-                offset: Offset(0, 2),
+                spreadRadius: 0.5,
+                blurRadius: 5,
+                offset: Offset(0, 3),
                 color: ConstantsColors.green,
               ),
             ],
@@ -212,9 +212,9 @@ class BasketCart extends StatelessWidget {
         color: Theme.of(context).cardColor,
         boxShadow: <BoxShadow>[
           BoxShadow(
-            spreadRadius: 1,
-            blurRadius: 16,
-            offset: const Offset(0, 5),
+            spreadRadius: 0.5,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
             color: Theme.of(context).shadowColor,
           )
         ],
@@ -326,8 +326,8 @@ class BasketCart extends StatelessWidget {
                           color: ConstantsColors.green,
                           boxShadow: const <BoxShadow>[
                             BoxShadow(
-                              spreadRadius: 1,
-                              blurRadius: 35,
+                              spreadRadius: 0.5,
+                              blurRadius: 5,
                               color: ConstantsColors.green,
                               offset: Offset(0, 3),
                             )
@@ -369,8 +369,8 @@ class BasketCart extends StatelessWidget {
                           color: ConstantsColors.red,
                           boxShadow: const <BoxShadow>[
                             BoxShadow(
-                              spreadRadius: 1,
-                              blurRadius: 35,
+                              spreadRadius: 0.5,
+                              blurRadius: 5,
                               color: ConstantsColors.red,
                               offset: Offset(0, 3),
                             )
