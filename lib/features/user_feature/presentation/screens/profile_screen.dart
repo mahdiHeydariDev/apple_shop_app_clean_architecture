@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_app_clean_architecture/core/bloc/theme/theme_bloc.dart';
-import 'package:store_app_clean_architecture/core/bloc/theme/theme_event.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_header.dart';
 import 'package:store_app_clean_architecture/core/widgets/custom_loading.dart';
@@ -13,6 +11,7 @@ import 'package:store_app_clean_architecture/features/user_feature/presentation/
 import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/login_screen.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/screens/register_screen.dart';
 import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/log_out_button.dart';
+import 'package:store_app_clean_architecture/features/user_feature/presentation/widgets/profile_item.dart';
 import 'package:store_app_clean_architecture/service_locator.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,8 +24,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
   }
 
@@ -157,68 +154,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 30,
-                        ),
-                        sliver: SliverGrid.builder(
-                          itemCount: 1,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 20,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 30,
                           ),
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                context.read<ThemeBloc>().add(
-                                      ThemeChangeEvent(),
-                                    );
-                              },
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    width: 56,
-                                    height: 56,
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    decoration: ShapeDecoration(
-                                      shape: ContinuousRectangleBorder(
-                                        borderRadius:
-                                            BorderRadiusDirectional.circular(
-                                          40,
-                                        ),
-                                      ),
-                                      shadows: const <BoxShadow>[
-                                        BoxShadow(
-                                          blurRadius: 10,
-                                          spreadRadius: 1,
-                                          color: ConstantsColors.blue,
-                                          offset: Offset(0, 5),
-                                        )
-                                      ],
-                                      color: ConstantsColors.blue,
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.color_lens_outlined,
-                                        color: Colors.white,
-                                        size: 45,
-                                      ),
-                                    ),
-                                  ),
-                                  const Text(
-                                    'تغییر پوسته',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                          sliver: SliverToBoxAdapter(
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              runSpacing: 25,
+                              spacing: 25,
+                              children: <Widget>[
+                                ProfileItem(
+                                  text: 'سفارشات اخیر',
+                                  icon: Icons.history,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'آدرس ها',
+                                  icon: Icons.location_on_outlined,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'ذخیره شده ها',
+                                  icon: Icons.bookmark_add_outlined,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'نظرات',
+                                  icon: Icons.chat_bubble_outline_rounded,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'تخفیف ها',
+                                  icon: Icons.local_offer_outlined,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'اطلاعیه',
+                                  icon: Icons.notifications,
+                                  whenClick: () {},
+                                ),
+                                ProfileItem(
+                                  text: 'پشتیبانی',
+                                  icon: Icons.headset_mic_outlined,
+                                  whenClick: () {},
+                                ),
+                              ],
+                            ),
+                          )),
                     ],
                   ],
                 ),
