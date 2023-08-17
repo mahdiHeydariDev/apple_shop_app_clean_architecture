@@ -14,12 +14,14 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           ),
         ) {
     on<ThemeInitEvent>((event, emit) {
-      if (event.brightness == Brightness.dark) {
-        themeBox.put('theme', 'dark');
-      } else {
-        themeBox.put('theme', 'light');
-      }
       var themeInfo = themeBox.get('theme');
+      if (themeInfo == null) {
+        if (event.brightness == Brightness.dark) {
+          themeBox.put('theme', 'dark');
+        } else {
+          themeBox.put('theme', 'light');
+        }
+      }
       if (themeInfo == 'dark') {
         emit(
           state.changeTheme(
