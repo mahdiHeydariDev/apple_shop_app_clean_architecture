@@ -369,7 +369,7 @@ class Comment extends StatelessWidget {
           Text(
             comment.text,
           ),
-          Spacer(),
+          const Spacer(),
           const FooterComment()
         ],
       ),
