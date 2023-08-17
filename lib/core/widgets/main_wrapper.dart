@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:store_app_clean_architecture/core/bloc/theme/theme_bloc.dart';
 import 'package:store_app_clean_architecture/core/constants/constant_colors.dart';
+import 'package:store_app_clean_architecture/features/app_feature/presentation/screens/settings.dart';
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_bloc.dart';
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_bloc.dart';
@@ -23,7 +24,7 @@ class MainWrapper extends StatefulWidget {
 }
 
 class _MainWrapperState extends State<MainWrapper> {
-  int screenIndex = 0;
+  int screenIndex = 2;
   @override
   Widget build(BuildContext context) {
     var orderBox = Hive.box<OrderEntity>('orders');
@@ -59,11 +60,6 @@ class _MainWrapperState extends State<MainWrapper> {
               ),
               items: <BottomNavigationBarItem>[
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home),
-                  label: 'خانه',
-                ),
-                const BottomNavigationBarItem(
                   icon: Icon(Icons.category_outlined),
                   activeIcon: Icon(Icons.category),
                   label: 'دسته بندی',
@@ -77,9 +73,19 @@ class _MainWrapperState extends State<MainWrapper> {
                   label: 'سبد خرید',
                 ),
                 const BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home),
+                  label: 'خانه',
+                ),
+                const BottomNavigationBarItem(
                   icon: Icon(Icons.person_outline),
                   activeIcon: Icon(Icons.person),
                   label: 'حساب کاربری',
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_applications_outlined),
+                  activeIcon: Icon(Icons.settings_applications),
+                  label: 'تنظیمات',
                 ),
               ],
             ),
@@ -92,10 +98,6 @@ class _MainWrapperState extends State<MainWrapper> {
   List<Widget> getScreens() {
     return [
       BlocProvider(
-        create: (context) => serviceLocator.get<HomeBloc>(),
-        child: const HomeScreen(),
-      ),
-      BlocProvider(
         create: (context) => serviceLocator.get<CategoriesBloc>(),
         child: const CategoriesScreen(),
       ),
@@ -103,10 +105,15 @@ class _MainWrapperState extends State<MainWrapper> {
         create: (context) => serviceLocator.get<BasketBloc>(),
         child: const BasketScreen(),
       ),
+      BlocProvider(
+        create: (context) => serviceLocator.get<HomeBloc>(),
+        child: const HomeScreen(),
+      ),
       BlocProvider.value(
         value: serviceLocator.get<ThemeBloc>(),
         child: const ProfileScreen(),
       ),
+      const SettingsScreen(),
     ];
   }
 }
