@@ -7,14 +7,15 @@ import 'package:store_app_clean_architecture/features/user_feature/data/data_sou
 import 'package:store_app_clean_architecture/features/user_feature/data/repository/remote/register_user_repository.dart';
 
 class RegisterUserRepositoryImpl extends RegisterUserRepository {
-  final RegisterUserDataSource dataSource;
-  RegisterUserRepositoryImpl({required this.dataSource});
+  final RegisterUserDataSource _dataSource;
+  RegisterUserRepositoryImpl({required RegisterUserDataSource dataSource})
+      : _dataSource = dataSource;
   @override
   Future<Either<int, String>> registerUser(
       {required RegisterUserParams params}) async {
     try {
       final Response dataSourceResponse =
-          await dataSource.registerUser(params: params);
+          await _dataSource.registerUser(params: params);
       if (dataSourceResponse.statusCode == 200) {
         return const Right('');
       } else {

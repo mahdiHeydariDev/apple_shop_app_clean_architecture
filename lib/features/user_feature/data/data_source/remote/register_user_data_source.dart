@@ -5,11 +5,11 @@ import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.
 import 'package:store_app_clean_architecture/core/utils/params/register_user_params.dart';
 
 class RegisterUserDataSource {
-  final Dio dio;
-  RegisterUserDataSource({required this.dio});
+  final Dio _dio;
+  RegisterUserDataSource(this._dio);
   Future<Response> registerUser({required RegisterUserParams params}) async {
     try {
-      final Response response = await dio.post(
+      final Response response = await _dio.post(
         ConstantsRoutesApi.userRegisterRoutes,
         data: {
           "username": params.userName,

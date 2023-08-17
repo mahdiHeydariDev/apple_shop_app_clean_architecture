@@ -7,14 +7,15 @@ import 'package:store_app_clean_architecture/features/user_feature/data/data_sou
 import 'package:store_app_clean_architecture/features/user_feature/data/repository/remote/login_user_repository.dart';
 
 class LoginUserRepositoryImpl extends LoginUserRepository {
-  final LoginUserDataSource dataSource;
-  LoginUserRepositoryImpl({required this.dataSource});
+  final LoginUserDataSource _dataSource;
+  LoginUserRepositoryImpl({required LoginUserDataSource dataSource})
+      : _dataSource = dataSource;
   @override
   Future<Either<int, String>> loginUser(
       {required LoginUserParams sentParams}) async {
     try {
       final Response dataSourceResponse =
-          await dataSource.loginUser(params: sentParams);
+          await _dataSource.loginUser(params: sentParams);
       if (dataSourceResponse.statusCode == 200) {
         return Right(dataSourceResponse.data['token']);
       } else {
