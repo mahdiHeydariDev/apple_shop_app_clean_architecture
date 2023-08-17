@@ -4,12 +4,12 @@ import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/order_entity.dart';
 
 class BasketDataSource {
-  final Box<OrderEntity> ordersBox;
-  BasketDataSource({required this.ordersBox});
+  final Box<OrderEntity> _ordersBox;
+  BasketDataSource(this._ordersBox);
   //get all orders from basket
   Future<List<OrderEntity>> getOrders() async {
     try {
-      final List<OrderEntity> response = ordersBox.values.toList();
+      final List<OrderEntity> response = _ordersBox.values.toList();
       return response;
     } on HiveError catch (exception) {
       throw ApiEception(
@@ -24,7 +24,7 @@ class BasketDataSource {
   //add a product to user basket
   Future<void> addToBasket({required OrderEntity order}) async {
     try {
-      await ordersBox.add(order);
+      await _ordersBox.add(order);
     } on HiveError catch (exception) {
       throw ApiEception(
         exceptionMessage: exception.message,
@@ -38,15 +38,15 @@ class BasketDataSource {
   //Increase Count of the Order
   Future<void> increseOrderCount({required OrderEntity selectedOrder}) async {
     try {
-      final List<OrderEntity> allOrders = ordersBox.values.toList();
+      final List<OrderEntity> allOrders = _ordersBox.values.toList();
       for (var order in allOrders) {
         if (order.id == selectedOrder.id) {
           order.count = order.count + 1;
         }
       }
-      await ordersBox.clear();
+      await _ordersBox.clear();
       for (var order in allOrders) {
-        await ordersBox.add(order);
+        await _ordersBox.add(order);
       }
     } on HiveError catch (exception) {
       throw ApiEception(
@@ -61,15 +61,15 @@ class BasketDataSource {
   //Dencrease Count of the Order
   Future<void> decreseOrderCount({required OrderEntity selectedOrder}) async {
     try {
-      final List<OrderEntity> allOrders = ordersBox.values.toList();
+      final List<OrderEntity> allOrders = _ordersBox.values.toList();
       for (var order in allOrders) {
         if (order.id == selectedOrder.id) {
           order.count = order.count - 1;
         }
       }
-      await ordersBox.clear();
+      await _ordersBox.clear();
       for (var order in allOrders) {
-        await ordersBox.add(order);
+        await _ordersBox.add(order);
       }
     } on HiveError catch (exception) {
       throw ApiEception(
@@ -84,10 +84,10 @@ class BasketDataSource {
   //Delete the Order
   Future<void> deleteOrder({required OrderEntity selectedOrder}) async {
     try {
-      final List<OrderEntity> allOrders = ordersBox.values.toList();
+      final List<OrderEntity> allOrders = _ordersBox.values.toList();
       final int selectedindex = allOrders.indexOf(selectedOrder);
 
-      await ordersBox.deleteAt(selectedindex);
+      await _ordersBox.deleteAt(selectedindex);
     } on HiveError catch (exception) {
       throw ApiEception(
         exceptionMessage: exception.message,
