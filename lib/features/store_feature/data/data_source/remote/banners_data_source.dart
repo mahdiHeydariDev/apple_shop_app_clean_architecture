@@ -4,12 +4,12 @@ import 'package:store_app_clean_architecture/core/utils/errors/api_error.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.dart';
 
 class BannersDataSource {
-  final Dio dio;
-  BannersDataSource({required this.dio});
+  final Dio _dio;
+  BannersDataSource(this._dio);
   Future<Response> getAllBanners() async {
     try {
       //get data from : http://startflutter.ir/api/collections/banner/records
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.bannersRoutes,
       );
 

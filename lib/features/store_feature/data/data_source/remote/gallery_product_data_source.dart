@@ -4,14 +4,14 @@ import 'package:store_app_clean_architecture/core/utils/errors/api_error.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.dart';
 
 class GalleryProductDataSource {
-  final Dio dio;
-  GalleryProductDataSource({required this.dio});
+  final Dio _dio;
+  GalleryProductDataSource(this._dio);
   Future<Response> getImages({required String productId}) async {
     final Map<String, dynamic> queryParams = {
       'filter': 'product_id="$productId"',
     };
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.galleryRoutes,
         queryParameters: queryParams,
       );

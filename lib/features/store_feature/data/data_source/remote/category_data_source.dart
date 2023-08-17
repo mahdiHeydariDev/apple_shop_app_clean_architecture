@@ -4,11 +4,11 @@ import 'package:store_app_clean_architecture/core/utils/errors/api_error.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.dart';
 
 class CategoryDataSource {
-  final Dio dio;
-  CategoryDataSource({required this.dio});
+  final Dio _dio;
+  CategoryDataSource(this._dio);
   Future<Response> getAllCategories() async {
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.categoryRoutes,
       );
       return response;
@@ -25,7 +25,7 @@ class CategoryDataSource {
   Future<Response> getCategoryById({required String id}) async {
     final Map<String, dynamic> queryParams = {'filter': 'id="$id"'};
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.categoryRoutes,
         queryParameters: queryParams,
       );

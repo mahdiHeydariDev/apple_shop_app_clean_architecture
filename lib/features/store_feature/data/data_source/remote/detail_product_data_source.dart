@@ -4,11 +4,11 @@ import 'package:store_app_clean_architecture/core/utils/errors/api_error.dart';
 import 'package:store_app_clean_architecture/core/utils/errors/uknown_exception.dart';
 
 class DetailProductDatasource {
-  final Dio dio;
-  DetailProductDatasource({required this.dio});
+  final Dio _dio;
+  DetailProductDatasource(this._dio);
   Future<Response> getVariantTypes() async {
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.variantTypesRoutes,
       );
       return response;
@@ -27,7 +27,7 @@ class DetailProductDatasource {
       'filter': 'product_id="$productId"'
     };
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.variantsRoutes,
         queryParameters: queryParams,
       );
@@ -48,7 +48,7 @@ class DetailProductDatasource {
       'filter': 'product_id="$productId"'
     };
     try {
-      final Response response = await dio.get(
+      final Response response = await _dio.get(
         ConstantsRoutesApi.propertiesRoutes,
         queryParameters: queryParams,
       );
