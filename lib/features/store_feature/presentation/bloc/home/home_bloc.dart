@@ -13,15 +13,18 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/home/home_status.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final BannersUseCase bannersUsecase;
-  final CategoriesUsecase categoriesUsecase;
-  final ProductsUsecase productsUsecase;
+  final BannersUseCase _bannersUsecase;
+  final CategoriesUsecase _categoriesUsecase;
+  final ProductsUsecase _productsUsecase;
 
   HomeBloc({
-    required this.bannersUsecase,
-    required this.categoriesUsecase,
-    required this.productsUsecase,
-  }) : super(
+    required BannersUseCase bannersUsecase,
+    required CategoriesUsecase categoriesUsecase,
+    required ProductsUsecase productsUsecase,
+  })  : _productsUsecase = productsUsecase,
+        _categoriesUsecase = categoriesUsecase,
+        _bannersUsecase = bannersUsecase,
+        super(
           HomeState(
             status: HomeInitStatus(),
           ),
@@ -36,16 +39,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final bool connectionResult = await CheckConnectionHandler.checkNow();
         if (connectionResult) {
           final Either<CustomError, List<BannerEntity>> bannersResponse =
-              await bannersUsecase();
+              await _bannersUsecase();
           final Either<CustomError, List<CategoryEntity>> categoriesResponse =
-              await categoriesUsecase.callAllCategories();
+              await _categoriesUsecase.callAllCategories();
 
           final Either<CustomError, List<ProductEntity>>
-              hotestProductsResponse = await productsUsecase(filter: 'Hotest');
+              hotestProductsResponse = await _productsUsecase(filter: 'Hotest');
 
           final Either<CustomError, List<ProductEntity>>
               bestSellerProductsResponse =
-              await productsUsecase(filter: 'Best Seller');
+              await _productsUsecase(filter: 'Best Seller');
 
           if (bannersResponse.isRight() &&
               categoriesResponse.isRight() &&

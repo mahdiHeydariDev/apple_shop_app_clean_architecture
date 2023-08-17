@@ -8,9 +8,10 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/categories/categories_status.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
-  final CategoriesUsecase categoriesUsecase;
-  CategoriesBloc({required this.categoriesUsecase})
-      : super(
+  final CategoriesUsecase _categoriesUsecase;
+  CategoriesBloc({required CategoriesUsecase categoriesUsecase})
+      : _categoriesUsecase = categoriesUsecase,
+        super(
           CategoriesState(
             status: CategoriesLoadingStatus(),
           ),
@@ -23,7 +24,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           ),
         );
         final Either<CustomError, List<CategoryEntity>> categoriesResponse =
-            await categoriesUsecase.callAllCategories();
+            await _categoriesUsecase.callAllCategories();
 
         if (categoriesResponse.isRight()) {
           List<CategoryEntity> categoriesList = [];

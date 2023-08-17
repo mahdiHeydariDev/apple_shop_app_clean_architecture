@@ -14,12 +14,12 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/variant_type_entity.dart';
 
 class DetailProductRepositoryImpl extends DetailProductRepository {
-  final DetailProductDatasource dataSource;
-  DetailProductRepositoryImpl({required this.dataSource});
+  final DetailProductDatasource _dataSource;
+  DetailProductRepositoryImpl(this._dataSource);
   @override
   Future<List<VariantTypeEntity>> getAllVariantTypes() async {
     try {
-      final Response dataSourceResponse = await dataSource.getVariantTypes();
+      final Response dataSourceResponse = await _dataSource.getVariantTypes();
 
       final List<VariantTypeEntity> variantTypeList =
           (dataSourceResponse.data['items'] as List)
@@ -39,7 +39,7 @@ class DetailProductRepositoryImpl extends DetailProductRepository {
   @override
   Future<List<VariantEntity>> getVariants({required String productId}) async {
     final Response dataSourceResponse =
-        await dataSource.getVariants(productId: productId);
+        await _dataSource.getVariants(productId: productId);
 
     final List<VariantEntity> variantsList =
         (dataSourceResponse.data['items'] as List)
@@ -91,7 +91,7 @@ class DetailProductRepositoryImpl extends DetailProductRepository {
       {required String productId}) async {
     try {
       final Response dataSourceResponse =
-          await dataSource.getProperties(productId: productId);
+          await _dataSource.getProperties(productId: productId);
       if (dataSourceResponse.statusCode == 200) {
         final List<PropertyEntity> propertyList =
             (dataSourceResponse.data['items'] as List)

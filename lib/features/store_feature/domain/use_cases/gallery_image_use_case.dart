@@ -4,12 +4,13 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/gallery_product_repository_impl.dart';
 
 class GalleryImagesUsecase {
-  final GalleryProductRepositoryImpl repository;
-  GalleryImagesUsecase({required this.repository});
+  final GalleryProductRepositoryImpl _repository;
+  GalleryImagesUsecase({required GalleryProductRepositoryImpl repository})
+      : _repository = repository;
 
   Future<Either<CustomError, List<GalleryImageEntity>>> call(
       {required String productId}) async {
-    return await repository.getAllImages(
+    return await _repository.getAllImages(
       productId: productId,
     );
   }

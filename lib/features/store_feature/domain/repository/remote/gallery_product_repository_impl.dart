@@ -9,14 +9,13 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/gallery_image_entity.dart';
 
 class GalleryProductRepositoryImpl extends GalleryProductRepository {
-  final GalleryProductDataSource dataSource;
-  GalleryProductRepositoryImpl({required this.dataSource});
+  final GalleryProductDataSource _dataSource;
+  GalleryProductRepositoryImpl(this._dataSource);
   @override
   Future<Either<CustomError, List<GalleryImageEntity>>> getAllImages(
       {required String productId}) async {
     try {
-      //TODO Searching for a way to automatically create lists
-      final Response datasourceResponse = await dataSource.getImages(
+      final Response datasourceResponse = await _dataSource.getImages(
         productId: productId,
       );
 

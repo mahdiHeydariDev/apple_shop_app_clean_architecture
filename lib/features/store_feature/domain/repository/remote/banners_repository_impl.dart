@@ -9,12 +9,12 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/banner_entity.dart';
 
 class BannersRepositoryImpl extends BannersRepository {
-  final BannersDataSource dataSource;
-  BannersRepositoryImpl({required this.dataSource});
+  final BannersDataSource _dataSource;
+  BannersRepositoryImpl(this._dataSource);
   @override
   Future<Either<CustomError, List<BannerEntity>>> getAllBanners() async {
     try {
-      final Response responseDataSource = await dataSource.getAllBanners();
+      final Response responseDataSource = await _dataSource.getAllBanners();
 
       if (responseDataSource.statusCode == 200) {
         final List<BannerModel> bannersList =

@@ -4,9 +4,10 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/remote/banners_repository_impl.dart';
 
 class BannersUseCase {
-  final BannersRepositoryImpl repository;
-  BannersUseCase({required this.repository});
+  final BannersRepositoryImpl _repository;
+  BannersUseCase({required BannersRepositoryImpl repository})
+      : _repository = repository;
   Future<Either<CustomError, List<BannerEntity>>> call() async {
-    return await repository.getAllBanners();
+    return await _repository.getAllBanners();
   }
 }

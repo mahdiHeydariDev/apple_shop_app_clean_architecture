@@ -10,14 +10,15 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/comment_entity.dart';
 
 class CommentsRepositoryImpl extends CommentsRepository {
-  final CommentsDataSource dataSource;
-  CommentsRepositoryImpl({required this.dataSource});
+  final CommentsDataSource _dataSource;
+  CommentsRepositoryImpl({required CommentsDataSource dataSource})
+      : _dataSource = dataSource;
   @override
   Future<Either<CustomError, List<CommentEntity>>> getAllComments(
       {required String productId}) async {
     try {
       final Response dataSourceResponse =
-          await dataSource.getComments(productId: productId);
+          await _dataSource.getComments(productId: productId);
       if (dataSourceResponse.statusCode == 200) {
         final List<CommentEntity> commentsList =
             (dataSourceResponse.data['items'] as List)

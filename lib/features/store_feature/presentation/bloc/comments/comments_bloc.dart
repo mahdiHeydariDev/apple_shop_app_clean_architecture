@@ -8,9 +8,10 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/comments/comments_status.dart';
 
 class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
-  final CommentsUseCase useCase;
-  CommentsBloc({required this.useCase})
-      : super(
+  final CommentsUseCase _useCase;
+  CommentsBloc({required CommentsUseCase useCase})
+      : _useCase = useCase,
+        super(
           CommentsState(
             status: CommentsLoadingStatus(),
           ),
@@ -22,7 +23,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
         ),
       );
       final Either<CustomError, List<CommentEntity>> commentsResponse =
-          await useCase.getComments(
+          await _useCase.getComments(
         productId: event.productId,
       );
       if (commentsResponse.isRight()) {

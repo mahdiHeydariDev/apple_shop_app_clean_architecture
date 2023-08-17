@@ -10,15 +10,15 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_entity.dart';
 
 class ProductsRepositoryImpl extends ProductsRepository {
-  final ProductsDataSource dataSource;
-  ProductsRepositoryImpl({required this.dataSource});
+  final ProductsDataSource _dataSource;
+  ProductsRepositoryImpl(this._dataSource);
   @override
   Future<Either<CustomError, List<ProductEntity>>> getFilteredProducts({
     required String filter,
   }) async {
     try {
       final Response dataSourceResponse =
-          await dataSource.getFilteredProducts(filter: filter);
+          await _dataSource.getFilteredProducts(filter: filter);
       if (dataSourceResponse.statusCode == 200) {
         final List<ProductEntity> productsList =
             (dataSourceResponse.data['items'] as List)

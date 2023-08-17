@@ -4,10 +4,11 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/comment_entity.dart';
 
 class CommentsUseCase {
-  final CommentsRepository repository;
-  CommentsUseCase({required this.repository});
+  final CommentsRepository _repository;
+  CommentsUseCase({required CommentsRepository repository})
+      : _repository = repository;
   Future<Either<CustomError, List<CommentEntity>>> getComments(
       {required String productId}) async {
-    return await repository.getAllComments(productId: productId);
+    return await _repository.getAllComments(productId: productId);
   }
 }

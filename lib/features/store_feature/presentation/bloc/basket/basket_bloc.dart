@@ -9,13 +9,15 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/basket/basket_status.dart';
 
 class BasketBloc extends Bloc<BasketEvent, BasketState> {
-  final BasketUsecase basketUsecase;
-  final PaymentHandler zarinpalPaymentHandler;
+  final BasketUsecase _basketUsecase;
+  final PaymentHandler _zarinpalPaymentHandler;
 
   BasketBloc({
-    required this.basketUsecase,
-    required this.zarinpalPaymentHandler,
-  }) : super(
+    required BasketUsecase basketUsecase,
+    required PaymentHandler zarinpalPaymentHandler,
+  })  : _zarinpalPaymentHandler = zarinpalPaymentHandler,
+        _basketUsecase = basketUsecase,
+        super(
           BasketState(
             status: BasketLoadingStatus(),
           ),
@@ -28,7 +30,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           ),
         );
         final Either<CustomError, List<OrderEntity>> ordersResponse =
-            await basketUsecase.callGetorders();
+            await _basketUsecase.callGetorders();
         if (ordersResponse.isRight()) {
           List<OrderEntity>? ordersList;
 
@@ -59,14 +61,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       },
     );
     on<BasketIncreseOrderCount>((event, emit) async {
-      await basketUsecase.increaseOrderCount(selectedOrder: event.order);
+      await _basketUsecase.increaseOrderCount(selectedOrder: event.order);
       emit(
         state.setStatus(
           BasketLoadingStatus(),
         ),
       );
       final Either<CustomError, List<OrderEntity>> ordersResponse =
-          await basketUsecase.callGetorders();
+          await _basketUsecase.callGetorders();
       if (ordersResponse.isRight()) {
         List<OrderEntity>? ordersList;
 
@@ -96,14 +98,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
     });
     on<BasketDecreseOrderCount>((event, emit) async {
-      await basketUsecase.decreaseOrderCount(selectedOrder: event.order);
+      await _basketUsecase.decreaseOrderCount(selectedOrder: event.order);
       emit(
         state.setStatus(
           BasketLoadingStatus(),
         ),
       );
       final Either<CustomError, List<OrderEntity>> ordersResponse =
-          await basketUsecase.callGetorders();
+          await _basketUsecase.callGetorders();
       if (ordersResponse.isRight()) {
         List<OrderEntity>? ordersList;
 
@@ -133,14 +135,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
     });
     on<BasketDeleteOrder>((event, emit) async {
-      await basketUsecase.deleteOrder(selectedOrder: event.order);
+      await _basketUsecase.deleteOrder(selectedOrder: event.order);
       emit(
         state.setStatus(
           BasketLoadingStatus(),
         ),
       );
       final Either<CustomError, List<OrderEntity>> ordersResponse =
-          await basketUsecase.callGetorders();
+          await _basketUsecase.callGetorders();
       if (ordersResponse.isRight()) {
         List<OrderEntity>? ordersList;
 
@@ -170,8 +172,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
     });
     on<BasketPaymentRequestEvent>((event, emit) {
-      zarinpalPaymentHandler.initRequestPayment(amount: event.amount);
-      zarinpalPaymentHandler.sendRequestPayment();
+      _zarinpalPaymentHandler.initRequestPayment(amount: event.amount);
+      _zarinpalPaymentHandler.sendRequestPayment();
     });
   }
 }

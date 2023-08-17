@@ -16,18 +16,23 @@ import 'package:store_app_clean_architecture/features/store_feature/presentation
 import 'package:store_app_clean_architecture/features/store_feature/presentation/bloc/detail_product/detail_product_status.dart';
 
 class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
-  final CategoriesUsecase categoryUsecase;
-  final GalleryImagesUsecase galleryImageUsecase;
-  final DetailProductUsecase detailProductUsecase;
-  final BasketUsecase basketUsecase;
-  final Box<OrderEntity> ordersBox;
+  final CategoriesUsecase _categoryUsecase;
+  final GalleryImagesUsecase _galleryImageUsecase;
+  final DetailProductUsecase _detailProductUsecase;
+  final BasketUsecase _basketUsecase;
+  final Box<OrderEntity> _ordersBox;
   DetailProductBloc({
-    required this.categoryUsecase,
-    required this.galleryImageUsecase,
-    required this.detailProductUsecase,
-    required this.basketUsecase,
-    required this.ordersBox,
-  }) : super(
+    required CategoriesUsecase categoryUsecase,
+    required GalleryImagesUsecase galleryImageUsecase,
+    required DetailProductUsecase detailProductUsecase,
+    required BasketUsecase basketUsecase,
+    required Box<OrderEntity> ordersBox,
+  })  : _ordersBox = ordersBox,
+        _basketUsecase = basketUsecase,
+        _detailProductUsecase = detailProductUsecase,
+        _galleryImageUsecase = galleryImageUsecase,
+        _categoryUsecase = categoryUsecase,
+        super(
           DetailProductState(
             status: DetailProductLoadingStatus(),
           ),
@@ -39,22 +44,22 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
         ),
       );
       final Either<CustomError, CategoryEntity> categoryResponse =
-          await categoryUsecase.callOneCategory(
+          await _categoryUsecase.callOneCategory(
         id: event.id,
       );
       final Either<CustomError, List<GalleryImageEntity>>
-          galleryImagesResponse = await galleryImageUsecase.call(
+          galleryImagesResponse = await _galleryImageUsecase.call(
         productId: event.productId,
       );
       final Either<CustomError, List<ProductVariantEntity>>
-          productVariantsResponse = await detailProductUsecase.callGetVariants(
+          productVariantsResponse = await _detailProductUsecase.callGetVariants(
         productId: event.productId,
       );
       final Either<CustomError, List<PropertyEntity>> propertiesResponse =
-          await detailProductUsecase.callGetProperties(
+          await _detailProductUsecase.callGetProperties(
         productId: event.productId,
       );
-      final List<OrderEntity> response = ordersBox.values.toList();
+      final List<OrderEntity> response = _ordersBox.values.toList();
 
       if (categoryResponse.isRight() &&
           galleryImagesResponse.isRight() &&
@@ -124,27 +129,27 @@ class DetailProductBloc extends Bloc<DetailProductEvent, DetailProductState> {
         ),
       );
 
-      await basketUsecase.callAddToBasket(
+      await _basketUsecase.callAddToBasket(
         product: event.product,
         variants: event.variants,
       );
       final Either<CustomError, CategoryEntity> categoryResponse =
-          await categoryUsecase.callOneCategory(
+          await _categoryUsecase.callOneCategory(
         id: event.product.category,
       );
       final Either<CustomError, List<GalleryImageEntity>>
-          galleryImagesResponse = await galleryImageUsecase.call(
+          galleryImagesResponse = await _galleryImageUsecase.call(
         productId: event.product.id,
       );
       final Either<CustomError, List<ProductVariantEntity>>
-          productVariantsResponse = await detailProductUsecase.callGetVariants(
+          productVariantsResponse = await _detailProductUsecase.callGetVariants(
         productId: event.product.id,
       );
       final Either<CustomError, List<PropertyEntity>> propertiesResponse =
-          await detailProductUsecase.callGetProperties(
+          await _detailProductUsecase.callGetProperties(
         productId: event.product.id,
       );
-      final List<OrderEntity> response = ordersBox.values.toList();
+      final List<OrderEntity> response = _ordersBox.values.toList();
 
       if (categoryResponse.isRight() &&
           galleryImagesResponse.isRight() &&

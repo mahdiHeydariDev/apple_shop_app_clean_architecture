@@ -10,8 +10,8 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/product_variant_entity.dart';
 
 class BasketRepositoryImpl extends BasketRepository {
-  final BasketDataSource dataSource;
-  BasketRepositoryImpl({required this.dataSource});
+  final BasketDataSource _dataSource;
+  BasketRepositoryImpl(this._dataSource);
   @override
   Future<Either<CustomError, String>> addToBasket({
     required ProductEntity product,
@@ -29,7 +29,7 @@ class BasketRepositoryImpl extends BasketRepository {
         count: 1,
         productVariants: variants,
       );
-      await dataSource.addToBasket(order: order);
+      await _dataSource.addToBasket(order: order);
       return const Right('Success');
     } on ApiEception catch (_) {
       return left(
@@ -58,7 +58,7 @@ class BasketRepositoryImpl extends BasketRepository {
   @override
   Future<Either<CustomError, List<OrderEntity>>> getOrders() async {
     try {
-      final List<OrderEntity> ordersResponse = await dataSource.getOrders();
+      final List<OrderEntity> ordersResponse = await _dataSource.getOrders();
       return Right(ordersResponse);
     } on ApiEception catch (_) {
       return Left(
@@ -79,16 +79,16 @@ class BasketRepositoryImpl extends BasketRepository {
 
   @override
   Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
-    dataSource.increseOrderCount(selectedOrder: selectedOrder);
+    _dataSource.increseOrderCount(selectedOrder: selectedOrder);
   }
 
   @override
   Future<void> decreaseOrderCount({required OrderEntity selectedOrder}) async {
-    dataSource.decreseOrderCount(selectedOrder: selectedOrder);
+    _dataSource.decreseOrderCount(selectedOrder: selectedOrder);
   }
 
   @override
   Future<void> deleteOrder({required OrderEntity selectedOrder}) async {
-    dataSource.deleteOrder(selectedOrder: selectedOrder);
+    _dataSource.deleteOrder(selectedOrder: selectedOrder);
   }
 }

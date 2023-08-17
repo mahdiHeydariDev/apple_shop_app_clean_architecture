@@ -9,13 +9,12 @@ import 'package:store_app_clean_architecture/features/store_feature/data/reposit
 import 'package:store_app_clean_architecture/features/store_feature/domain/entity/category_entity.dart';
 
 class CategoriesRepositoryImpl extends CategoriesRepository {
-  final CategoryDataSource dataSource;
-  CategoriesRepositoryImpl({required this.dataSource});
+  final CategoryDataSource _dataSource;
+  CategoriesRepositoryImpl(this._dataSource);
   @override
   Future<Either<CustomError, List<CategoryEntity>>> getAllCategories() async {
     try {
-      //TODO Searching for a way to automatically create lists
-      final Response datasourceResponse = await dataSource.getAllCategories();
+      final Response datasourceResponse = await _dataSource.getAllCategories();
       if (datasourceResponse.statusCode == 200) {
         final List<CategoryEntity> bannersList =
             (datasourceResponse.data['items'] as List)
@@ -53,9 +52,8 @@ class CategoriesRepositoryImpl extends CategoriesRepository {
   Future<Either<CustomError, CategoryEntity>> getCategoryById(
       {required String id}) async {
     try {
-      //TODO Searching for a way to automatically create lists
       final Response datasourceResponse =
-          await dataSource.getCategoryById(id: id);
+          await _dataSource.getCategoryById(id: id);
 
       if (datasourceResponse.statusCode == 200) {
         final CategoryEntity category =

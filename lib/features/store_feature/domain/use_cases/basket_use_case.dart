@@ -6,31 +6,32 @@ import 'package:store_app_clean_architecture/features/store_feature/domain/entit
 import 'package:store_app_clean_architecture/features/store_feature/domain/repository/local/basket_repository_impl.dart';
 
 class BasketUsecase {
-  final BasketRepositoryImpl repository;
-  BasketUsecase({required this.repository});
+  final BasketRepositoryImpl _repository;
+  BasketUsecase({required BasketRepositoryImpl repository})
+      : _repository = repository;
   Future<Either<CustomError, String>> callAddToBasket({
     required ProductEntity product,
     required List<ProductVariantEntity> variants,
   }) async {
-    return await repository.addToBasket(
+    return await _repository.addToBasket(
       product: product,
       variants: variants,
     );
   }
 
   Future<Either<CustomError, List<OrderEntity>>> callGetorders() async {
-    return await repository.getOrders();
+    return await _repository.getOrders();
   }
 
   Future<void> increaseOrderCount({required OrderEntity selectedOrder}) async {
-    await repository.increaseOrderCount(selectedOrder: selectedOrder);
+    await _repository.increaseOrderCount(selectedOrder: selectedOrder);
   }
 
   Future<void> decreaseOrderCount({required OrderEntity selectedOrder}) async {
-    await repository.decreaseOrderCount(selectedOrder: selectedOrder);
+    await _repository.decreaseOrderCount(selectedOrder: selectedOrder);
   }
 
   Future<void> deleteOrder({required OrderEntity selectedOrder}) async {
-    await repository.deleteOrder(selectedOrder: selectedOrder);
+    await _repository.deleteOrder(selectedOrder: selectedOrder);
   }
 }
