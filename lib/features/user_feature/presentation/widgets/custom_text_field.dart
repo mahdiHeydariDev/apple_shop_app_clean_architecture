@@ -6,9 +6,9 @@ class CustomTextField extends StatefulWidget {
   final IconData icon;
   final TextEditingController controller;
   final bool isSecret;
-  bool haveError;
-  String errorText;
-  CustomTextField({
+  final bool haveError;
+  final String errorText;
+  const CustomTextField({
     super.key,
     required this.hintText,
     required this.icon,
@@ -27,7 +27,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     isHide = widget.isSecret;
 
     super.initState();
