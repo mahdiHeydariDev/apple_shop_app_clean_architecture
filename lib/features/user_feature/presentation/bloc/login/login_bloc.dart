@@ -41,7 +41,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           response.fold((l) => null, (token) => userToken = token);
 
           await _pref.setString('token', userToken!);
-          print(_pref.get('token'));
 
           emit(
             state.setStatus(
